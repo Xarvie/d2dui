@@ -1,12 +1,12 @@
 ﻿#include "GuiWindow.h"
-
+#include "GuiButton.h"
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE PrevInstance, LPSTR CmdLine, int nCmdShow) { return GuiWindow::D2DInit(); }
 
 void GuiMain()
 {
 	GuiWindow* window = new GuiWindow;
 	window->NewWindow(NULL, L"タイトル", 500, 600, 400, 250);
-
+	GuiButton* bt1 = new GuiButton(window);
 
 	GuiWindow* window2 = new GuiWindow;
 	window2->NewWindow(NULL, L"제목");

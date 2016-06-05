@@ -10,14 +10,7 @@ GuiWindow::~GuiWindow()//释放D2D工厂
 {
 
 }
-void GuiWindow::Refresh()
-{
-	GetClientRect(Hwnd, &MainRc);
-	//HwndRenderTarget->Resize(D2D1::SizeU(this->MainRc.right - this->MainRc.left, this->MainRc.bottom - this->MainRc.top));
-	HwndRenderTarget->BeginDraw();
-	HwndRenderTarget->EndDraw();
-	//ShowWindow(this->Hwnd, SW_SHOW);
-}
+
 
 void GuiWindow::WriteText(const WCHAR * _String, const WCHAR * _FontName, float _Size, int _x, int _y, int _width, int _height)
 {
@@ -50,9 +43,55 @@ void GuiWindow::WriteText(const WCHAR * _String, const WCHAR * _FontName, float 
 		MessageBox(NULL, L"Create IDWriteTextFormat failed!", L"Error", 0);
 		return;
 	}
-	HwndRenderTarget->BeginDraw();
-	HwndRenderTarget->DrawText(_String, wcslen(_String), TextFormat, TextLayoutRect, BrushWhite);
-	HwndRenderTarget->EndDraw();
+	hwndRenderTarget->BeginDraw();
+	hwndRenderTarget->DrawText(_String, wcslen(_String), TextFormat, TextLayoutRect, BrushWhite);
+	hwndRenderTarget->EndDraw();
+}
+void GuiWindow::Refresh()
+{
+	GetClientRect(this->hwnd, &this->MainRc);
+	//HwndRenderTarget->BeginDraw();
+	//HwndRenderTarget->EndDraw();
+	//HwndRenderTarget->Resize(D2D1::SizeU(this->MainRc.right - this->MainRc.left, this->MainRc.bottom - this->MainRc.top));
+
+	//ShowWindow(this->Hwnd, SW_SHOW);
+	D2D_RECT_F rect = D2D1::RectF((float)0, (float)0, (float)MainRc.right, (float)MainRc.bottom);
+	ID2D1SolidColorBrush            *BrushBg;
+	ID2D1SolidColorBrush            *BrushBorder;
+	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x1E1E1E, 1.0F), &BrushBg);
+	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x007ACC, 1.0F), &BrushBorder);
+	hwndRenderTarget->BeginDraw();
+	hwndRenderTarget->FillRectangle(rect, BrushBg);
+	hwndRenderTarget->DrawRectangle(rect, BrushBorder);
+	hwndRenderTarget->EndDraw();
+	WriteText(L"你好");
+	BrushBg->Release();
+	BrushBorder->Release();
+}
+void GuiWindow::Resize()
+{
+}
+void GuiWindow::WndMsgProc(UINT message, WPARAM wparam, LPARAM lparam)
+{
+	switch (message)
+	{
+	case WM_MOUSEMOVE:
+		break;
+	case WM_LBUTTONDOWN:
+		SendMessage(hwnd, WM_CLOSE, 0, 0);
+		break;
+	case WM_LBUTTONUP:
+		break;
+	case WM_PAINT:
+		Refresh();
+		break;
+	case WM_DESTROY:
+		break;
+	case WM_SIZE:
+		hwndRenderTarget->Resize(D2D1::SizeU(LOWORD(lparam), HIWORD(lparam)));
+		Resize();
+		break;
+	}
 }
 LRESULT CALLBACK GuiWindow::WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
@@ -60,23 +99,9 @@ LRESULT CALLBACK GuiWindow::WndProc(HWND hwnd, UINT message, WPARAM wparam, LPAR
 	for (int i = 0; i < GuiWindow::NumBerOfMainWindow; i++)
 	{
 		pthis = GuiWindow::Window[i];
-		if (hwnd == pthis->Hwnd)
+		if (hwnd == pthis->hwnd)
 		{
-			switch (message)
-			{
-			case WM_MOUSEMOVE:
-				break;
-			case WM_LBUTTONDOWN:
-				break;
-			case WM_LBUTTONUP:
-				break;
-			case WM_PAINT:
-				pthis->Refresh();
-				break;
-			case WM_DESTROY:
-				break;
-			}
-
+			pthis->WndMsgProc(message, wparam, lparam);
 		}
 	}
 	return DefWindowProc(hwnd, message, wparam, lparam);
@@ -117,19 +142,19 @@ void GuiWindow::NewWindow(
 	HINSTANCE hInstance = GuiRegisterClass(_title);
 	//窗口创建
 	//WS_POPUP | WS_MINIMIZEBOX
-	Hwnd = CreateWindowEx(NULL, _title, _title, WS_OVERLAPPEDWINDOW, _x, _y, _width, _height, NULL, NULL, hInstance, NULL);
+	hwnd = CreateWindowEx(NULL, _title, _title, WS_OVERLAPPEDWINDOW, _x, _y, _width, _height, NULL, NULL, hInstance, NULL);
 
-	GetClientRect(Hwnd, &MainRc);
+	GetClientRect(hwnd, &MainRc);
 
 	hr = GuiWindow::Factory->CreateHwndRenderTarget(
 		D2D1::RenderTargetProperties(),
 		D2D1::HwndRenderTargetProperties(
-			Hwnd,
+			hwnd,
 			D2D1::SizeU(MainRc.right - MainRc.left, MainRc.bottom - MainRc.top)),
-		&(HwndRenderTarget));
+		&(hwndRenderTarget));
 	if (FAILED(hr))
 	{
-		MessageBox(Hwnd, L"Create HwndRenderTarget Failed", L"Error:", 0);
+		MessageBox(hwnd, L"Create HwndRenderTarget Failed", L"Error:", 0);
 		return;
 	}
 
@@ -144,7 +169,7 @@ void GuiWindow::NewWindow(
 		MessageBox(NULL, L"Create DirectWrite factory failed!", L"Error", 0);
 		return;
 	}
-	hr = HwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &BrushWhite);
+	hr = hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &BrushWhite);
 
 	if (FAILED(hr))
 	{
@@ -152,25 +177,29 @@ void GuiWindow::NewWindow(
 		return;
 	}
 
-	HwndRenderTarget->SetAntialiasMode(D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+	hwndRenderTarget->SetAntialiasMode(D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 	ID2D1SolidColorBrush            *BrushBg;
 	ID2D1SolidColorBrush            *BrushBorder;
 	D2D_RECT_F rect = D2D1::RectF((float)0, (float)0, (float)_width, (float)_height);
 
-	HwndRenderTarget->CreateSolidColorBrush(_colorBg, &BrushBg);
-	HwndRenderTarget->CreateSolidColorBrush(_colorBorder, &BrushBorder);
-	HwndRenderTarget->BeginDraw();
-	HwndRenderTarget->FillRectangle(rect, BrushBg);
-	HwndRenderTarget->DrawRectangle(rect, BrushBorder);
-	HwndRenderTarget->EndDraw();
+	hwndRenderTarget->CreateSolidColorBrush(_colorBg, &BrushBg);
+	hwndRenderTarget->CreateSolidColorBrush(_colorBorder, &BrushBorder);
+	hwndRenderTarget->BeginDraw();
+	hwndRenderTarget->FillRectangle(rect, BrushBg);
+	hwndRenderTarget->DrawRectangle(rect, BrushBorder);
+	hwndRenderTarget->EndDraw();
 	WriteText(_title);
 	BrushBg->Release();
 	BrushBorder->Release();
 
 
-	ShowWindow(Hwnd, SW_SHOW);
+	ShowWindow(hwnd, SW_SHOW);
 
 	return;
+}
+void GuiWindow::DelWindow()
+{
+	this->
 }
 /*
 GuiWindow GuiWindow::NewWindow(GuiWindow* window, char * _title, D2D1_COLOR_F _colorBorder, D2D1_COLOR_F _colorBg, int _top, int _bottom, int _left, int _right, int layer, bool _visible)
@@ -191,53 +220,8 @@ BrushBorder->Release();
 return ;
 }
 */
-GuiLabel GuiLabel::NewLabel(
-	char*   _title,
-	int     _top,
-	int     _bottom,
-	int     _left,
-	int     _right,
-	int     _layer,
-	bool    _visible)
-{
-	return GuiLabel();
-}
-GuiButton GuiButton::NewButton(
-	GuiWindow* _window,
-	char*   _title,
-	int     _top,
-	int     _bottom,
-	int     _left,
-	int     _right,
-	COLORREF _colorBg,
-	COLORREF _colortext,
-	int     _layer,
-	bool    _visible)
-{
-	/*
-	RECT rc = d2d.MainRcGet();
-	ID2D1SolidColorBrush *tmpBrush;
-	d2d.HwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x11111111, 1.0f), &tmpBrush);
-	d2d.HwndRenderTarget->DrawRectangle(D2D1::RectF((float)_left, (float)_top, (float)_right, (float)_bottom), tmpBrush);
-	tmpBrush->Release();
-	d2d.HwndRenderTarget->Resize(D2D1::SizeU(rc.right - rc.left, rc.bottom - rc.top));
-	d2d.HwndRenderTarget->BeginDraw();
-	d2d.HwndRenderTarget->EndDraw();
-	*/
-	return *this;
 
-}
-GuiEdit GuiEdit::NewEdit(
-	char*   _title,
-	int     _top,
-	int     _bottom,
-	int     _left,
-	int     _right,
-	int     _layer,
-	bool    _visible)
-{
-	return GuiEdit();
-}
+
 
 
 GuiWindow::GuiWindow()

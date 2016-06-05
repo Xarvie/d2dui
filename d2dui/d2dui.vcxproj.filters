@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\control">
+      <UniqueIdentifier>{e47ab2db-1425-4d2a-a296-590a10b6099a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\control">
+      <UniqueIdentifier>{6bc02143-465b-404b-991e-823c82b0cc37}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="demo.cpp">
@@ -21,11 +27,17 @@
     <ClCompile Include="GuiWindow.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="GuiButton.cpp">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GuiWindow.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="changelog" />
+    <ClInclude Include="GuiButton.h">
+      <Filter>头文件\control</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

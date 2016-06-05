@@ -148,9 +148,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="demo.cpp" />
+    <ClCompile Include="GuiButton.cpp" />
     <ClCompile Include="GuiWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GuiButton.h" />
     <ClInclude Include="GuiWindow.h" />
     <ClInclude Include="changelog" />
   </ItemGroup>
