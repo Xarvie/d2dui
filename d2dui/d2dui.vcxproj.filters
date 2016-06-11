@@ -21,23 +21,20 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="changelog" />
+    <ClInclude Include="GuiBase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiWindow.h">
+      <Filter>头文件\control</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="demo.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="GuiWindow.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="GuiButton.cpp">
       <Filter>源文件\control</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="GuiWindow.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="changelog" />
-    <ClInclude Include="GuiButton.h">
-      <Filter>头文件\control</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

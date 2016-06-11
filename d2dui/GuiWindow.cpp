@@ -1,5 +1,4 @@
 #include "GuiWindow.h"
-
 int                     GuiWindow::NumBerOfMainWindow = 0;
 MSG                     GuiWindow::msg;
 IDWriteFactory*         GuiWindow::DWriteFactory = NULL;
@@ -43,38 +42,41 @@ void GuiWindow::WriteText(const WCHAR * _String, const WCHAR * _FontName, float 
 		MessageBox(NULL, L"Create IDWriteTextFormat failed!", L"Error", 0);
 		return;
 	}
-	hwndRenderTarget->BeginDraw();
+	//hwndRenderTarget->BeginDraw();
 	hwndRenderTarget->DrawText(_String, wcslen(_String), TextFormat, TextLayoutRect, BrushWhite);
-	hwndRenderTarget->EndDraw();
+	//hwndRenderTarget->EndDraw();
 }
 void GuiWindow::Refresh()
 {
 	GetClientRect(this->hwnd, &this->MainRc);
-	//HwndRenderTarget->BeginDraw();
-	//HwndRenderTarget->EndDraw();
+	
 	//HwndRenderTarget->Resize(D2D1::SizeU(this->MainRc.right - this->MainRc.left, this->MainRc.bottom - this->MainRc.top));
 
 	//ShowWindow(this->Hwnd, SW_SHOW);
 	D2D_RECT_F rect = D2D1::RectF((float)0, (float)0, (float)MainRc.right, (float)MainRc.bottom);
 	ID2D1SolidColorBrush            *BrushBg;
 	ID2D1SolidColorBrush            *BrushBorder;
+	hwndRenderTarget->BeginDraw();
 	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x1E1E1E, 1.0F), &BrushBg);
 	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x007ACC, 1.0F), &BrushBorder);
-	hwndRenderTarget->BeginDraw();
+
 	hwndRenderTarget->FillRectangle(rect, BrushBg);
 	hwndRenderTarget->DrawRectangle(rect, BrushBorder);
-	hwndRenderTarget->EndDraw();
 	WriteText(L"你好");
+	hwndRenderTarget->EndDraw();
 	BrushBg->Release();
 	BrushBorder->Release();
 }
 void GuiWindow::Resize()
 {
 }
-void GuiWindow::WndMsgProc(UINT message, WPARAM wparam, LPARAM lparam)
+void GuiWindow::WndProc(UINT message, WPARAM wparam, LPARAM lparam)
 {
 	switch (message)
 	{
+	case WM_CREATE:
+		ShowWindow(hwnd, SW_SHOW);
+		break;
 	case WM_MOUSEMOVE:
 		break;
 	case WM_LBUTTONDOWN:
@@ -88,12 +90,13 @@ void GuiWindow::WndMsgProc(UINT message, WPARAM wparam, LPARAM lparam)
 	case WM_DESTROY:
 		break;
 	case WM_SIZE:
+		
 		hwndRenderTarget->Resize(D2D1::SizeU(LOWORD(lparam), HIWORD(lparam)));
 		Resize();
 		break;
 	}
 }
-LRESULT CALLBACK GuiWindow::WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
+LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
 	GuiWindow* pthis = NULL;
 	for (int i = 0; i < GuiWindow::NumBerOfMainWindow; i++)
@@ -101,12 +104,13 @@ LRESULT CALLBACK GuiWindow::WndProc(HWND hwnd, UINT message, WPARAM wparam, LPAR
 		pthis = GuiWindow::Window[i];
 		if (hwnd == pthis->hwnd)
 		{
-			pthis->WndMsgProc(message, wparam, lparam);
+			pthis->WndProc(message, wparam, lparam);
 		}
 	}
 	return DefWindowProc(hwnd, message, wparam, lparam);
 }
-HINSTANCE GuiWindow::GuiRegisterClass(LPCWSTR _lpszClassName) {
+HINSTANCE GuiWindow::GuiRegisterClass(LPCWSTR _lpszClassName) 
+{
 	WNDCLASSEX wc;
 	wc.cbClsExtra = 0;
 	wc.cbSize = sizeof(wc);
@@ -116,7 +120,7 @@ HINSTANCE GuiWindow::GuiRegisterClass(LPCWSTR _lpszClassName) {
 	wc.hIcon = NULL;
 	wc.hIconSm = NULL;
 	wc.hInstance = (HINSTANCE)GetModuleHandle(NULL);
-	wc.lpfnWndProc = WndProc;
+	wc.lpfnWndProc = WndMsgProc;
 	wc.lpszClassName = _lpszClassName;
 	wc.lpszMenuName = NULL;
 	wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -139,11 +143,32 @@ void GuiWindow::NewWindow(
 	GuiWindow::NumBerOfMainWindow += 1;
 	Window = (GuiWindow**)realloc(Window, sizeof(GuiWindow*)*GuiWindow::NumBerOfMainWindow);
 	Window[GuiWindow::NumBerOfMainWindow - 1] = this;
+	//元素链头初始化
+	if (head)
+	{
+		RECT* rc = new RECT;
+		rc->left = 0;
+		rc->top = 0;
+		rc->right = _width;
+		rc->bottom = _height;
+		head = new GuiElement;
+		head->child = NULL;
+		head->next = NULL;
+		head->id = 1;
+		head->image = NULL;
+		head->last = NULL;
+		head->next = NULL;
+		head->parent = NULL;
+		head->rc = rc;
+		head->text = _title;
+		head->through = false;
+		head->visible = true;
+	}
 	HINSTANCE hInstance = GuiRegisterClass(_title);
 	//窗口创建
 	//WS_POPUP | WS_MINIMIZEBOX
 	hwnd = CreateWindowEx(NULL, _title, _title, WS_OVERLAPPEDWINDOW, _x, _y, _width, _height, NULL, NULL, hInstance, NULL);
-
+	
 	GetClientRect(hwnd, &MainRc);
 
 	hr = GuiWindow::Factory->CreateHwndRenderTarget(
@@ -187,19 +212,17 @@ void GuiWindow::NewWindow(
 	hwndRenderTarget->BeginDraw();
 	hwndRenderTarget->FillRectangle(rect, BrushBg);
 	hwndRenderTarget->DrawRectangle(rect, BrushBorder);
-	hwndRenderTarget->EndDraw();
 	WriteText(_title);
+	hwndRenderTarget->EndDraw();
 	BrushBg->Release();
 	BrushBorder->Release();
-
-
 	ShowWindow(hwnd, SW_SHOW);
 
 	return;
 }
 void GuiWindow::DelWindow()
 {
-	this->
+
 }
 /*
 GuiWindow GuiWindow::NewWindow(GuiWindow* window, char * _title, D2D1_COLOR_F _colorBorder, D2D1_COLOR_F _colorBg, int _top, int _bottom, int _left, int _right, int layer, bool _visible)

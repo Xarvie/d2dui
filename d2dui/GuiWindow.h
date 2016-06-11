@@ -1,8 +1,6 @@
-ï»¿#pragma once
-#include <d2d1.h>
-#include <Windows.h>
-#include <dwrite.h>
-class GuiWindow
+#pragma once
+#include "GuiBase.h"
+class GuiWindow:public GuiBase
 {
 public:
 	GuiWindow();
@@ -14,10 +12,10 @@ public:
 	bool MouseDown = false;
 	void Refresh();
 	void Resize();
-	void WriteText(const WCHAR* _String, const WCHAR* _FontName = L"å¾®è½¯é›…é»‘", float _Size = 15.0f, int _x = 10, int _y = 5, int _width = 300, int _height = 20);
+	void WriteText(const WCHAR* _String, const WCHAR* _FontName = L"Î¢ÈíÑÅºÚ", float _Size = 15.0f, int _x = 10, int _y = 5, int _width = 300, int _height = 20);
 	void NewWindow(
 		GuiWindow*      _window,
-		LPCWSTR         _title = L"æ ‡é¢˜",
+		LPCWSTR         _title = L"±êÌâ",
 		int             _x = 200,
 		int             _y = 200,
 		int             _width = 500,
@@ -28,8 +26,8 @@ public:
 		bool            _visible = true
 	);
 	void DelWindow();
-	static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
-	virtual void WndMsgProc(UINT message, WPARAM wparam, LPARAM lparam);
+	static LRESULT CALLBACK WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
+	void WndProc(UINT message, WPARAM wparam, LPARAM lparam);
 	HINSTANCE GuiRegisterClass(LPCWSTR _lpszClassName);
 	RECT     MainRc;
 	HWND     hwnd;
@@ -41,7 +39,7 @@ public:
 	static IDWriteFactory*      DWriteFactory;
 	static GuiWindow**          Window;
 	static int                  NumBerOfMainWindow;
-
+	GuiElement* head;
 };
 
 void GuiMain();
