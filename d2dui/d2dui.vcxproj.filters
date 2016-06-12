@@ -28,6 +28,9 @@
     <ClInclude Include="GuiWindow.h">
       <Filter>头文件\control</Filter>
     </ClInclude>
+    <ClInclude Include="Guilib.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="demo.cpp">

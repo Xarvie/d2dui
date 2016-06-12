@@ -1,4 +1,4 @@
-﻿#include "GuiWindow.h"
+﻿#include "Guilib.h"
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE PrevInstance, LPSTR CmdLine, int nCmdShow) { return GuiWindow::D2DInit(); }
 
 void GuiMain()

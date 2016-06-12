@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="changelog" />
     <ClInclude Include="GuiBase.h" />
+    <ClInclude Include="Guilib.h" />
     <ClInclude Include="GuiWindow.h" />
   </ItemGroup>
   <ItemGroup>

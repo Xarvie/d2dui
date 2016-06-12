@@ -43,13 +43,13 @@ void GuiWindow::WriteText(const WCHAR * _String, const WCHAR * _FontName, float 
 		return;
 	}
 	//hwndRenderTarget->BeginDraw();
-	hwndRenderTarget->DrawText(_String, wcslen(_String), TextFormat, TextLayoutRect, BrushWhite);
+	hwndRenderTarget->DrawText(_String, (UINT32)wcslen(_String), TextFormat, TextLayoutRect, BrushWhite);
 	//hwndRenderTarget->EndDraw();
 }
 void GuiWindow::Refresh()
 {
 	GetClientRect(this->hwnd, &this->MainRc);
-	
+
 	//HwndRenderTarget->Resize(D2D1::SizeU(this->MainRc.right - this->MainRc.left, this->MainRc.bottom - this->MainRc.top));
 
 	//ShowWindow(this->Hwnd, SW_SHOW);
@@ -70,7 +70,7 @@ void GuiWindow::Refresh()
 void GuiWindow::Resize()
 {
 }
-void GuiWindow::WndProc(UINT message, WPARAM wparam, LPARAM lparam)
+void GuiWindow::WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
 	switch (message)
 	{
@@ -90,7 +90,7 @@ void GuiWindow::WndProc(UINT message, WPARAM wparam, LPARAM lparam)
 	case WM_DESTROY:
 		break;
 	case WM_SIZE:
-		
+
 		hwndRenderTarget->Resize(D2D1::SizeU(LOWORD(lparam), HIWORD(lparam)));
 		Resize();
 		break;
@@ -104,12 +104,12 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 		pthis = GuiWindow::Window[i];
 		if (hwnd == pthis->hwnd)
 		{
-			pthis->WndProc(message, wparam, lparam);
+			pthis->WndProc(hwnd, message, wparam, lparam);
 		}
 	}
 	return DefWindowProc(hwnd, message, wparam, lparam);
 }
-HINSTANCE GuiWindow::GuiRegisterClass(LPCWSTR _lpszClassName) 
+HINSTANCE GuiWindow::GuiRegisterClass(LPCWSTR _lpszClassName)
 {
 	WNDCLASSEX wc;
 	wc.cbClsExtra = 0;
@@ -144,31 +144,33 @@ void GuiWindow::NewWindow(
 	Window = (GuiWindow**)realloc(Window, sizeof(GuiWindow*)*GuiWindow::NumBerOfMainWindow);
 	Window[GuiWindow::NumBerOfMainWindow - 1] = this;
 	//元素链头初始化
-	if (head)
+	if (ElementHead)
 	{
 		RECT* rc = new RECT;
 		rc->left = 0;
 		rc->top = 0;
 		rc->right = _width;
 		rc->bottom = _height;
-		head = new GuiElement;
-		head->child = NULL;
-		head->next = NULL;
-		head->id = 1;
-		head->image = NULL;
-		head->last = NULL;
-		head->next = NULL;
-		head->parent = NULL;
-		head->rc = rc;
-		head->text = _title;
-		head->through = false;
-		head->visible = true;
+		ElementHead = new GuiElement;
+		ElementHead->child = NULL;
+		ElementHead->next = NULL;
+		ElementHead->id = 1;
+		ElementHead->image = NULL;
+		ElementHead->last = NULL;
+		ElementHead->next = NULL;
+		ElementHead->parent = NULL;
+		ElementHead->rc = rc;
+		ElementHead->text = _title;
+		ElementHead->through = false;
+		ElementHead->visible = true;
+		ElementHead->vfunc = (GuiBase*)this;
 	}
+	ElementBack = ElementHead;
 	HINSTANCE hInstance = GuiRegisterClass(_title);
 	//窗口创建
 	//WS_POPUP | WS_MINIMIZEBOX
 	hwnd = CreateWindowEx(NULL, _title, _title, WS_OVERLAPPEDWINDOW, _x, _y, _width, _height, NULL, NULL, hInstance, NULL);
-	
+
 	GetClientRect(hwnd, &MainRc);
 
 	hr = GuiWindow::Factory->CreateHwndRenderTarget(
@@ -217,7 +219,6 @@ void GuiWindow::NewWindow(
 	BrushBg->Release();
 	BrushBorder->Release();
 	ShowWindow(hwnd, SW_SHOW);
-
 	return;
 }
 void GuiWindow::DelWindow()

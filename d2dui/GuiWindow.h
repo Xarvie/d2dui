@@ -27,7 +27,7 @@ public:
 	);
 	void DelWindow();
 	static LRESULT CALLBACK WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
-	void WndProc(UINT message, WPARAM wparam, LPARAM lparam);
+	void WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
 	HINSTANCE GuiRegisterClass(LPCWSTR _lpszClassName);
 	RECT     MainRc;
 	HWND     hwnd;
@@ -39,7 +39,8 @@ public:
 	static IDWriteFactory*      DWriteFactory;
 	static GuiWindow**          Window;
 	static int                  NumBerOfMainWindow;
-	GuiElement* head;
+	GuiElement* ElementHead;
+	GuiElement* ElementBack;
 };
 
 void GuiMain();
