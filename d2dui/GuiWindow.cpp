@@ -104,7 +104,14 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 		pthis = GuiWindow::Window[i];
 		if (hwnd == pthis->hwnd)
 		{
-			pthis->WndProc(hwnd, message, wparam, lparam);
+			GuiElement* tmp = pthis->ElementHead;
+			while (tmp!=NULL)
+			{
+				tmp->vfunc->WndProc(hwnd, message, wparam, lparam);
+				tmp = tmp->next;
+				
+			}
+			
 		}
 	}
 	return DefWindowProc(hwnd, message, wparam, lparam);
@@ -144,7 +151,7 @@ void GuiWindow::NewWindow(
 	Window = (GuiWindow**)realloc(Window, sizeof(GuiWindow*)*GuiWindow::NumBerOfMainWindow);
 	Window[GuiWindow::NumBerOfMainWindow - 1] = this;
 	//元素链头初始化
-	if (ElementHead)
+	if (ElementHead==NULL)
 	{
 		RECT* rc = new RECT;
 		rc->left = 0;

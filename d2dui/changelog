@@ -3,20 +3,20 @@
 GuiWindows类 创建
 
 2016.05.24
-GuiWindow类		重写
+GuiWindow类		重写.
 D2DUI类			成员函数增加Refresh.
-D2DUI类			成员与函数并入GuiWindow类
-D2DUI类			移除
-UI库				封装WINDOWS窗口消息
+D2DUI类			成员与函数并入GuiWindow类.
+D2DUI类			移除.
+UI库				封装WINDOWS窗口消息.
 GuiWindow类		GuiWindow渲染目标随同原生window一起重画.
 
 2016.05.28
-GuiWindow类		GuiWindow创建会附带边框与背景颜色
+GuiWindow类		GuiWindow创建会附带边框与背景颜色.
 
 2016.05.29
-GuiWindow类		WriteText参数顺序调整
-GuiControl类		新增
-GuiControl类		派生GuiLabel类
+GuiWindow类		WriteText参数顺序调整.
+GuiControl类		新增.
+GuiControl类		派生GuiLabel类.
 派生GuiButton类
 派生GuiEdit类
 
