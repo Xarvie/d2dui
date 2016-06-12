@@ -3,10 +3,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE PrevInstance, LPSTR CmdLine, i
 
 void GuiMain()
 {
-	GuiWindow* window = new GuiWindow;
-	window->NewWindow(NULL, L"タイトル", 500, 600, 400, 250);
-
-
+	GuiWindow* window1 = new GuiWindow;
+	window1->NewWindow(NULL, L"タイトル", 500, 600, 400, 250);
 	GuiWindow* window2 = new GuiWindow;
 	window2->NewWindow(NULL, L"제목");
 	GuiWindow* window3 = new GuiWindow;

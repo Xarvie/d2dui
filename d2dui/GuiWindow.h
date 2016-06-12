@@ -1,6 +1,6 @@
 #pragma once
 #include "GuiBase.h"
-class GuiWindow:public GuiBase
+class GuiWindow :public GuiBase
 {
 public:
 	GuiWindow();
@@ -26,7 +26,7 @@ public:
 	);
 	void DelWindow();
 	static LRESULT CALLBACK WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
-	void WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
+	void WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam);
 	HINSTANCE GuiRegisterClass(LPCWSTR _lpszClassName);
 	RECT     MainRc;
 	HWND     hwnd;

@@ -20,5 +20,5 @@ struct GuiElement
 class GuiBase
 {
 public:
-	virtual void WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) = 0;
+	virtual void WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam) = 0;
 };

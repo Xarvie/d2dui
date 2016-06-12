@@ -61,7 +61,7 @@ void GuiWindow::Refresh()
 	BrushBg->Release();
 	BrushBorder->Release();
 }
-void GuiWindow::WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
+void GuiWindow::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam)
 {
 	switch (message)
 	{
@@ -69,6 +69,7 @@ void GuiWindow::WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 		ShowWindow(hwnd, SW_SHOW);
 		return;
 	case WM_ERASEBKGND:
+		message = 0;
 		return;
 	case WM_MOUSEMOVE:
 		return;
@@ -89,8 +90,6 @@ void GuiWindow::WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 }
 LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
-	if (message== WM_ERASEBKGND)
-		return 0;
 	GuiWindow* pthis = NULL;
 	for (int i = 0; i < GuiWindow::NumBerOfMainWindow; i++)
 	{
@@ -98,14 +97,12 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 		if (hwnd == pthis->hwnd)
 		{
 			GuiElement* tmp = pthis->ElementHead;
-			while (tmp!=NULL)
+			while (tmp != NULL)
 			{
 				tmp->vfunc->WndProc(hwnd, message, wparam, lparam);
 				tmp = tmp->next;
 			}
-			
 		}
-		
 	}
 	return DefWindowProc(hwnd, message, wparam, lparam);
 }
@@ -144,7 +141,7 @@ void GuiWindow::NewWindow(
 	Window = (GuiWindow**)realloc(Window, sizeof(GuiWindow*)*GuiWindow::NumBerOfMainWindow);
 	Window[GuiWindow::NumBerOfMainWindow - 1] = this;
 	//元素链头初始化
-	if (ElementHead==NULL)
+	if (ElementHead == NULL)
 	{
 		RECT* rc = new RECT;
 		rc->left = 0;
