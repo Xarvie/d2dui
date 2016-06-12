@@ -11,7 +11,6 @@ public:
 	long MouseY = 0;
 	bool MouseDown = false;
 	void Refresh();
-	void Resize();
 	void WriteText(const WCHAR* _String, const WCHAR* _FontName = L"Î¢ÈíÑÅºÚ", float _Size = 15.0f, int _x = 10, int _y = 5, int _width = 300, int _height = 20);
 	void NewWindow(
 		GuiWindow*      _window,

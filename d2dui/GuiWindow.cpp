@@ -42,17 +42,11 @@ void GuiWindow::WriteText(const WCHAR * _String, const WCHAR * _FontName, float 
 		MessageBox(NULL, L"Create IDWriteTextFormat failed!", L"Error", 0);
 		return;
 	}
-	//hwndRenderTarget->BeginDraw();
 	hwndRenderTarget->DrawText(_String, (UINT32)wcslen(_String), TextFormat, TextLayoutRect, BrushWhite);
-	//hwndRenderTarget->EndDraw();
 }
 void GuiWindow::Refresh()
 {
 	GetClientRect(this->hwnd, &this->MainRc);
-
-	//HwndRenderTarget->Resize(D2D1::SizeU(this->MainRc.right - this->MainRc.left, this->MainRc.bottom - this->MainRc.top));
-
-	//ShowWindow(this->Hwnd, SW_SHOW);
 	D2D_RECT_F rect = D2D1::RectF((float)0, (float)0, (float)MainRc.right, (float)MainRc.bottom);
 	ID2D1SolidColorBrush            *BrushBg;
 	ID2D1SolidColorBrush            *BrushBorder;
@@ -67,37 +61,36 @@ void GuiWindow::Refresh()
 	BrushBg->Release();
 	BrushBorder->Release();
 }
-void GuiWindow::Resize()
-{
-}
 void GuiWindow::WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
 	switch (message)
 	{
 	case WM_CREATE:
 		ShowWindow(hwnd, SW_SHOW);
-		break;
+		return;
+	case WM_ERASEBKGND:
+		return;
 	case WM_MOUSEMOVE:
-		break;
+		return;
 	case WM_LBUTTONDOWN:
 		SendMessage(hwnd, WM_CLOSE, 0, 0);
-		break;
+		return;
 	case WM_LBUTTONUP:
-		break;
+		return;
 	case WM_PAINT:
 		Refresh();
-		break;
+		return;
 	case WM_DESTROY:
-		break;
+		return;
 	case WM_SIZE:
-
 		hwndRenderTarget->Resize(D2D1::SizeU(LOWORD(lparam), HIWORD(lparam)));
-		Resize();
-		break;
+		return;
 	}
 }
 LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
+	if (message== WM_ERASEBKGND)
+		return 0;
 	GuiWindow* pthis = NULL;
 	for (int i = 0; i < GuiWindow::NumBerOfMainWindow; i++)
 	{
@@ -109,10 +102,10 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 			{
 				tmp->vfunc->WndProc(hwnd, message, wparam, lparam);
 				tmp = tmp->next;
-				
 			}
 			
 		}
+		
 	}
 	return DefWindowProc(hwnd, message, wparam, lparam);
 }
