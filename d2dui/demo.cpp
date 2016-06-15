@@ -15,6 +15,6 @@ void GuiMain()
 	window5->NewWindow(L"제목");
 	GuiWindow* window6 = new GuiWindow;
 	window6->NewWindow(L"제목");
-}
 
+}
 

@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <dwrite.h>
 class GuiBase;
+class GuiWindow;
 struct GuiElement
 {
 	int id;
