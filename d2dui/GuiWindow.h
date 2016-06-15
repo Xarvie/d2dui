@@ -13,7 +13,6 @@ public:
 	void Refresh();
 	void WriteText(const WCHAR* _String, const WCHAR* _FontName = L"Œ¢»Ì—≈∫⁄", float _Size = 15.0f, int _x = 10, int _y = 5, int _width = 300, int _height = 20);
 	void NewWindow(
-		GuiWindow*      _window,
 		LPCWSTR         _title = L"±ÍÃ‚",
 		int             _x = 200,
 		int             _y = 200,

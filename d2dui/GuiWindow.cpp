@@ -125,7 +125,6 @@ HINSTANCE GuiWindow::GuiRegisterClass(LPCWSTR _lpszClassName)
 	return wc.hInstance;
 }
 void GuiWindow::NewWindow(
-	GuiWindow* d2d,
 	LPCWSTR  _title,
 	int _x,
 	int _y,
