@@ -50,42 +50,48 @@ void GuiWindow::Refresh()
 	D2D_RECT_F rect = D2D1::RectF((float)0, (float)0, (float)MainRc.right, (float)MainRc.bottom);
 	ID2D1SolidColorBrush            *BrushBg;
 	ID2D1SolidColorBrush            *BrushBorder;
-	hwndRenderTarget->BeginDraw();
 	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x1E1E1E, 1.0F), &BrushBg);
 	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x007ACC, 1.0F), &BrushBorder);
 
 	hwndRenderTarget->FillRectangle(rect, BrushBg);
 	hwndRenderTarget->DrawRectangle(rect, BrushBorder);
 	WriteText(L"ÄãºÃ");
-	hwndRenderTarget->EndDraw();
+
 	BrushBg->Release();
 	BrushBorder->Release();
 }
-void GuiWindow::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam)
+int GuiWindow::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam)
 {
 	switch (message)
 	{
 	case WM_CREATE:
 		ShowWindow(hwnd, SW_SHOW);
-		return;
+		return 0;
 	case WM_ERASEBKGND:
 		message = 0;
-		return;
+		return 0;
 	case WM_MOUSEMOVE:
-		return;
+		return 0;
 	case WM_LBUTTONDOWN:
 		SendMessage(hwnd, WM_CLOSE, 0, 0);
-		return;
+		if (!(GuiWindow::NumBerOfMainWindow -= 1))
+		{
+			PostQuitMessage(0);
+		}
+		return 0;
 	case WM_LBUTTONUP:
-		return;
+		return 0;
 	case WM_PAINT:
 		Refresh();
-		return;
+		return 0;
 	case WM_DESTROY:
-		return;
+		//SendMessage(hwnd, WM_CLOSE, 0, 0);
+
+
+		return 0;
 	case WM_SIZE:
 		hwndRenderTarget->Resize(D2D1::SizeU(LOWORD(lparam), HIWORD(lparam)));
-		return;
+		return 0;
 	}
 }
 LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
@@ -97,10 +103,21 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 		if (hwnd == pthis->hwnd)
 		{
 			GuiElement* tmp = pthis->ElementHead;
+			if (message == WM_PAINT )
+			{
+				pthis->hwndRenderTarget->BeginDraw();
+			}
 			while (tmp != NULL)
 			{
-				tmp->vfunc->WndProc(hwnd, message, wparam, lparam);
+				if (tmp->vfunc->WndProc(hwnd, message, wparam, lparam) != 0)
+				{
+					break;
+				}
 				tmp = tmp->next;
+			}
+			if (message == WM_PAINT)
+			{
+				pthis->hwndRenderTarget->EndDraw();
 			}
 		}
 	}

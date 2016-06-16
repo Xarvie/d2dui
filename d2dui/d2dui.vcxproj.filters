@@ -39,11 +39,11 @@
     <ClCompile Include="demo.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="GuiWindow.cpp">
+    <ClCompile Include="GuiLabel.cpp">
       <Filter>源文件\control</Filter>
     </ClCompile>
-    <ClCompile Include="GuiLabel.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="GuiWindow.cpp">
+      <Filter>源文件\control</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

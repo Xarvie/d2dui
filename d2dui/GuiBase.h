@@ -20,6 +20,15 @@ struct GuiElement
 };
 class GuiBase
 {
-public:
-	virtual void WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam) = 0;
+public:	
+	/// <summary>
+	/// 消息响应函数
+	/// </summary>
+	/// <param name="hwnd">句柄.</param>
+	/// <param name="message">消息.</param>
+	/// <param name="wparam">wparam.</param>
+	/// <param name="lparam">lparam.</param>
+	/// <returns>返回1跳过处理后续消息</returns>
+	virtual int WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam) = 0;
+	int state=0;
 };
