@@ -1,5 +1,6 @@
 #pragma once
 #include "GuiBase.h"
+#include "GuiWindow.h"
 class GuiLabel :public GuiBase
 {
 public:
@@ -23,4 +24,5 @@ public:
 		D2D1_COLOR_F    _colorBg = D2D1::ColorF(0x1E1E1E, 1.0F),
 		bool            _visible = true
 	);
+	void Refresh();
 };

@@ -11,7 +11,7 @@ GuiWindow::~GuiWindow()//释放D2D工厂
 }
 
 
-void GuiWindow::WriteText(const WCHAR * _String, const WCHAR * _FontName, float _Size, int _x, int _y, int _width, int _height)
+void GuiWindow::WriteText(const WCHAR* _String, float _x, float _y, float _width, float _height, float _Size, const WCHAR* _FontName)
 {
 	HRESULT hr;
 	IDWriteTextFormat* TextFormat = NULL;
@@ -55,7 +55,6 @@ void GuiWindow::Refresh()
 
 	hwndRenderTarget->FillRectangle(rect, BrushBg);
 	hwndRenderTarget->DrawRectangle(rect, BrushBorder);
-	WriteText(L"你好");
 
 	BrushBg->Release();
 	BrushBorder->Release();
@@ -73,11 +72,6 @@ int GuiWindow::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam
 	case WM_MOUSEMOVE:
 		return 0;
 	case WM_LBUTTONDOWN:
-		SendMessage(hwnd, WM_CLOSE, 0, 0);
-		if (!(GuiWindow::NumBerOfMainWindow -= 1))
-		{
-			PostQuitMessage(0);
-		}
 		return 0;
 	case WM_LBUTTONUP:
 		return 0;
@@ -85,14 +79,14 @@ int GuiWindow::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam
 		Refresh();
 		return 0;
 	case WM_DESTROY:
-		//SendMessage(hwnd, WM_CLOSE, 0, 0);
-
-
+		return 0;
+	case WM_CLOSE:
 		return 0;
 	case WM_SIZE:
 		hwndRenderTarget->Resize(D2D1::SizeU(LOWORD(lparam), HIWORD(lparam)));
 		return 0;
 	}
+	return 0;
 }
 LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
@@ -100,10 +94,11 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 	for (int i = 0; i < GuiWindow::NumBerOfMainWindow; i++)
 	{
 		pthis = GuiWindow::Window[i];
+
 		if (hwnd == pthis->hwnd)
 		{
 			GuiElement* tmp = pthis->ElementHead;
-			if (message == WM_PAINT )
+			if (message == WM_PAINT)
 			{
 				pthis->hwndRenderTarget->BeginDraw();
 			}
@@ -177,6 +172,7 @@ void GuiWindow::NewWindow(
 		ElementHead->through = false;
 		ElementHead->visible = true;
 		ElementHead->vfunc = (GuiBase*)this;
+		ElementHead->window = this;
 	}
 	ElementBack = ElementHead;
 	HINSTANCE hInstance = GuiRegisterClass(_title);
@@ -257,8 +253,6 @@ BrushBorder->Release();
 return ;
 }
 */
-
-
 
 
 GuiWindow::GuiWindow()
