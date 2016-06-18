@@ -45,30 +45,3 @@ int GuiLabel::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam)
 	return 0;
 }
 
-GuiLabel* NewLabel(GuiWindow * _window, LPCWSTR _title, int _x, int _y, int _width, int _height, D2D1_COLOR_F _colorBorder, D2D1_COLOR_F _colorBg, bool _visible)
-{
-	GuiLabel* control = new GuiLabel;
-	GuiElement *tmp = new GuiElement;
-	RECT* rc = new RECT;
-	rc->left = _x;
-	rc->top = _y;
-	rc->right = _x + _width;
-	rc->bottom = _y + _height;
-	tmp->child = NULL;
-	tmp->next = NULL;
-	tmp->id = _window->ElementBack->id + 1;
-	tmp->image = NULL;
-	tmp->last = _window->ElementBack;
-	tmp->next = NULL;
-	tmp->parent = NULL;
-	tmp->rc = rc;
-	tmp->text = _title;
-	tmp->through = false;
-	tmp->visible = true;
-	tmp->vfunc = (GuiBase*)control;
-	tmp->window = _window;
-	control->self = tmp;
-	_window->ElementBack->next = tmp;
-	_window->ElementBack = tmp;
-	return control;
-}

@@ -12,17 +12,7 @@ public:
 	bool MouseDown = false;
 	void Refresh();
 	void WriteText(const WCHAR* _String, float _x = 10.0f, float _y = 5.0f, float _width = 300.0f, float _height = 20.0f, float _Size = 15.0f, const WCHAR* _FontName = L"Œ¢»Ì—≈∫⁄");
-	void NewWindow(
-		LPCWSTR         _title = L"±ÍÃ‚",
-		int             _x = 200,
-		int             _y = 200,
-		int             _width = 500,
-		int             _height = 300,
-		D2D1_COLOR_F    _colorBorder = D2D1::ColorF(0x007ACC, 1.0F),
-		D2D1_COLOR_F    _colorBg = D2D1::ColorF(0x1E1E1E, 1.0F),
-		int             _layer = 0,
-		bool            _visible = true
-	);
+
 	void DelWindow();
 	static LRESULT CALLBACK WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
 	/// <summary>

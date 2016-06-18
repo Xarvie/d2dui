@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClCompile Include="demo.cpp" />
     <ClCompile Include="GuiLabel.cpp" />
+    <ClCompile Include="Guilib.cpp" />
     <ClCompile Include="GuiWindow.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

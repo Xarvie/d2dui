@@ -45,5 +45,8 @@
     <ClCompile Include="GuiWindow.cpp">
       <Filter>源文件\control</Filter>
     </ClCompile>
+    <ClCompile Include="Guilib.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
