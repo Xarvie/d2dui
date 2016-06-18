@@ -42,10 +42,12 @@ int GuiLabel::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam)
 	case WM_SIZE:
 		return 0;
 	}
+	return 0;
 }
 
-void GuiLabel::NewLabel(GuiWindow * _window, LPCWSTR _title, int _x, int _y, int _width, int _height, D2D1_COLOR_F _colorBorder, D2D1_COLOR_F _colorBg, bool _visible)
+GuiLabel* NewLabel(GuiWindow * _window, LPCWSTR _title, int _x, int _y, int _width, int _height, D2D1_COLOR_F _colorBorder, D2D1_COLOR_F _colorBg, bool _visible)
 {
+	GuiLabel* control = new GuiLabel;
 	GuiElement *tmp = new GuiElement;
 	RECT* rc = new RECT;
 	rc->left = _x;
@@ -63,9 +65,10 @@ void GuiLabel::NewLabel(GuiWindow * _window, LPCWSTR _title, int _x, int _y, int
 	tmp->text = _title;
 	tmp->through = false;
 	tmp->visible = true;
-	tmp->vfunc = (GuiBase*)this;
+	tmp->vfunc = (GuiBase*)control;
 	tmp->window = _window;
-	self = tmp;
+	control->self = tmp;
 	_window->ElementBack->next = tmp;
 	_window->ElementBack = tmp;
+	return control;
 }
