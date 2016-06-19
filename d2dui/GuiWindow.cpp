@@ -137,30 +137,10 @@ HINSTANCE GuiWindow::GuiRegisterClass(LPCWSTR _lpszClassName)
 	return wc.hInstance;
 }
 
-void GuiWindow::DelWindow()
+void GuiWindow::DelWindow()//要改:不是每个GuiWindow都是new出来的.
 {
 
 }
-/*
-GuiWindow GuiWindow::NewWindow(GuiWindow* window, char * _title, D2D1_COLOR_F _colorBorder, D2D1_COLOR_F _colorBg, int _top, int _bottom, int _left, int _right, int layer, bool _visible)
-{
-d2dui* d2d = &window->GetD2d();
-RECT rc = d2d->MainRcGet();
-ID2D1SolidColorBrush *BrushBg;
-ID2D1SolidColorBrush *BrushBorder;
-D2D_RECT_F rect = D2D1::RectF((float)_left, (float)_top, (float)_right, (float)_bottom);
-d2d->HwndRenderTarget->CreateSolidColorBrush(_colorBg, &BrushBg);
-d2d->HwndRenderTarget->CreateSolidColorBrush(_colorBorder, &BrushBorder);
-d2d->HwndRenderTarget->BeginDraw();
-d2d->HwndRenderTarget->DrawRectangle(rect, BrushBorder);
-d2d->HwndRenderTarget->FillRectangle(rect, BrushBg);
-d2d->HwndRenderTarget->EndDraw();
-BrushBg->Release();
-BrushBorder->Release();
-return ;
-}
-*/
-
 
 GuiWindow::GuiWindow()
 {

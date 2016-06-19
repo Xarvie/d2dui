@@ -32,7 +32,7 @@ public:
 	/// <returns>返回1跳过处理后续消息</returns>
 	virtual int WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam) = 0;
 	int state=0;
-	GuiElement* self;
+	GuiElement* Element;
 	
 };
 

@@ -2,13 +2,12 @@
 void GuiLabel::Refresh()
 {
 	float x, y, r, b;
-
-	x = (float)this->self->rc->left;
-	y = (float)this->self->rc->top;
-	r = (float)this->self->rc->right;
-	b = (float)this->self->rc->bottom;
-	HWND& hwnd = this->self->window->hwnd;
-	ID2D1HwndRenderTarget*& hwndRenderTarget = this->self->window->hwndRenderTarget;
+	x = (float)this->Element->rc->left;
+	y = (float)this->Element->rc->top;
+	r = (float)this->Element->rc->right;
+	b = (float)this->Element->rc->bottom;
+	HWND& hwnd = this->Element->window->hwnd;
+	ID2D1HwndRenderTarget*& hwndRenderTarget = this->Element->window->hwndRenderTarget;
 
 	D2D_RECT_F rect = D2D1::RectF(x, y, r, b);
 	ID2D1SolidColorBrush            *BrushBg;
@@ -18,7 +17,7 @@ void GuiLabel::Refresh()
 
 	hwndRenderTarget->FillRectangle(rect, BrushBg);
 	hwndRenderTarget->DrawRectangle(rect, BrushBorder,0.5);
-	this->self->window->WriteText(this->self->text, x + 2, y + 2, r - x, b - y);
+	this->Element->window->WriteText(this->Element->text, x + 2, y + 2, r - x, b - y);
 
 	BrushBg->Release();
 	BrushBorder->Release();

@@ -118,7 +118,7 @@ GuiLabel* GuiNew::NewLabel(GuiWindow * _window, LPCWSTR _title, int _x, int _y, 
 	tmp->visible = true;
 	tmp->vfunc = (GuiBase*)control;
 	tmp->window = _window;
-	control->self = tmp;
+	control->Element = tmp;
 	_window->ElementBack->next = tmp;
 	_window->ElementBack = tmp;
 	return control;

@@ -3,6 +3,7 @@
 #include "GuiLabel.h"
 namespace GuiNew
 {
+	
 	GuiWindow* NewWindow(
 		LPCWSTR         _title = L"БъЬт",
 		int             _x = 200,
