@@ -42,7 +42,10 @@ public:
 	/// <param name="lparam">lparam.</param>
 	/// <returns>返回1跳过处理后续消息</returns>
 	virtual int WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam) = 0;
-	int state = 0;
+	int MousePosState = StateMouseOut;
+	int MouseLBState = StateMouseLBUp;
+	int MouseRBState = StateMouseRBUp;
+	int MouseMBState = StateMouseMBUp;
 	GuiElement* Element;
 
 };

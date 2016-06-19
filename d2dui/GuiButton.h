@@ -17,4 +17,5 @@ public:
 	void Refresh();
 	void MouseIn();
 	void MouseOut();
+	void MouseLBDown();
 };
