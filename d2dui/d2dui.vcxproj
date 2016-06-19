@@ -150,12 +150,14 @@
   <ItemGroup>
     <ClInclude Include="changelog" />
     <ClInclude Include="GuiBase.h" />
+    <ClInclude Include="GuiButton.h" />
     <ClInclude Include="GuiLabel.h" />
     <ClInclude Include="Guilib.h" />
     <ClInclude Include="GuiWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="demo.cpp" />
+    <ClCompile Include="GuiButton.cpp" />
     <ClCompile Include="GuiLabel.cpp" />
     <ClCompile Include="Guilib.cpp" />
     <ClCompile Include="GuiWindow.cpp" />

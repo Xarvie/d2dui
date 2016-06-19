@@ -34,6 +34,9 @@
     <ClInclude Include="GuiLabel.h">
       <Filter>头文件\control</Filter>
     </ClInclude>
+    <ClInclude Include="GuiButton.h">
+      <Filter>头文件\control</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="demo.cpp">
@@ -47,6 +50,9 @@
     </ClCompile>
     <ClCompile Include="Guilib.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiButton.cpp">
+      <Filter>源文件\control</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

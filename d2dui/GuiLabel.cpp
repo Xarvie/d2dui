@@ -11,16 +11,12 @@ void GuiLabel::Refresh()
 
 	D2D_RECT_F rect = D2D1::RectF(x, y, r, b);
 	ID2D1SolidColorBrush            *BrushBg;
-	ID2D1SolidColorBrush            *BrushBorder;
+
 	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x1E1E1E, 1.0F), &BrushBg);
-	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x007ACC, 1.0F), &BrushBorder);
-
 	hwndRenderTarget->FillRectangle(rect, BrushBg);
-	hwndRenderTarget->DrawRectangle(rect, BrushBorder,0.5);
 	this->Element->window->WriteText(this->Element->text, x + 2, y + 2, r - x, b - y);
-
 	BrushBg->Release();
-	BrushBorder->Release();
+
 }
 int GuiLabel::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam)
 {

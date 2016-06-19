@@ -2,10 +2,10 @@
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) { return GuiWindow::D2DInit(); }
 GuiWindow* GuiNew::NewWindow(
 	LPCWSTR  _title,
-	int _x,
-	int _y,
-	int _width,
-	int _height,
+	float _x,
+	float _y,
+	float _width,
+	float _height,
 	D2D1_COLOR_F _colorBorder,
 	D2D1_COLOR_F _colorBg,
 	int layer,
@@ -19,9 +19,9 @@ GuiWindow* GuiNew::NewWindow(
 	//元素链头初始化
 	if (control->ElementHead == NULL)
 	{
-		RECT* rc = new RECT;
-		rc->left = 0;
-		rc->top = 0;
+		D2D_RECT_F* rc = new D2D_RECT_F;
+		rc->left = 0.F;
+		rc->top = 0.F;
 		rc->right = _width;
 		rc->bottom = _height;
 		control->ElementHead = new GuiElement;
@@ -43,7 +43,8 @@ GuiWindow* GuiNew::NewWindow(
 	HINSTANCE hInstance = control->GuiRegisterClass(_title);
 	//窗口创建
 	//WS_POPUP | WS_MINIMIZEBOX
-	control->hwnd = CreateWindowEx(NULL, _title, _title, WS_OVERLAPPEDWINDOW, _x, _y, _width, _height, NULL, NULL, hInstance, NULL);
+	//WS_OVERLAPPEDWINDOW
+	control->hwnd = CreateWindowEx(NULL, _title, _title, WS_POPUP | WS_MINIMIZEBOX, (int)_x, (int)_y, (int)_width, (int)_height, NULL, NULL, hInstance, NULL);
 
 	GetClientRect(control->hwnd, &control->MainRc);
 
@@ -78,7 +79,7 @@ GuiWindow* GuiNew::NewWindow(
 		return NULL;
 	}
 
-	control->hwndRenderTarget->SetAntialiasMode(D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+	control->hwndRenderTarget->SetAntialiasMode(D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);//抗锯齿
 	ID2D1SolidColorBrush            *BrushBg;
 	ID2D1SolidColorBrush            *BrushBorder;
 	D2D_RECT_F rect = D2D1::RectF((float)0, (float)0, (float)_width, (float)_height);
@@ -96,11 +97,38 @@ GuiWindow* GuiNew::NewWindow(
 	return control;
 }
 
-GuiLabel* GuiNew::NewLabel(GuiWindow * _window, LPCWSTR _title, int _x, int _y, int _width, int _height, D2D1_COLOR_F _colorBorder, D2D1_COLOR_F _colorBg, bool _visible)
+GuiLabel* GuiNew::NewLabel(GuiWindow * _window, LPCWSTR _title, float _x, float _y, float _width, float _height, D2D1_COLOR_F _colorBorder, D2D1_COLOR_F _colorBg, bool _visible)
 {
 	GuiLabel* control = new GuiLabel;
 	GuiElement *tmp = new GuiElement;
-	RECT* rc = new RECT;
+	D2D_RECT_F* rc = new D2D_RECT_F;
+	rc->left = _x;
+	rc->top = _y;
+	rc->right = _x + _width;
+	rc->bottom = _y + _height;
+	tmp->child = NULL;
+	tmp->next = NULL;
+	tmp->id = _window->ElementBack->id + 1;
+	tmp->image = NULL;
+	tmp->last = _window->ElementBack;
+	tmp->next = NULL;
+	tmp->parent = NULL;
+	tmp->rc = rc;
+	tmp->text = _title;
+	tmp->through = false;
+	tmp->visible = true;
+	tmp->vfunc = (GuiBase*)control;
+	tmp->window = _window;
+	control->Element = tmp;
+	_window->ElementBack->next = tmp;
+	_window->ElementBack = tmp;
+	return control;
+}
+GuiButton* GuiNew::NewButton(GuiWindow * _window, LPCWSTR _title, float _x, float _y, float _width, float _height, D2D1_COLOR_F _colorBorder, D2D1_COLOR_F _colorBg, bool _visible)
+{
+	GuiButton* control = new GuiButton;
+	GuiElement *tmp = new GuiElement;
+	D2D_RECT_F* rc = new D2D_RECT_F;
 	rc->left = _x;
 	rc->top = _y;
 	rc->right = _x + _width;

@@ -54,7 +54,8 @@ void GuiWindow::Refresh()
 	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x007ACC, 1.0F), &BrushBorder);
 
 	hwndRenderTarget->FillRectangle(rect, BrushBg);
-	hwndRenderTarget->DrawRectangle(rect, BrushBorder);
+	hwndRenderTarget->DrawRectangle(rect, BrushBorder,1);
+	
 
 	BrushBg->Release();
 	BrushBorder->Release();

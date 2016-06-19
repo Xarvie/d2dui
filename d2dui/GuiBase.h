@@ -2,12 +2,23 @@
 #include <d2d1.h>
 #include <Windows.h>
 #include <dwrite.h>
+enum MouseState {
+	StateMouseOut,
+	StateMouseIn,
+	StateMouseLBUp,
+	StateMouseLBDown,
+	StateMouseRBUp,
+	StateMouseRBDown,
+	StateMouseMBUp,
+	StateMouseMBDown,
+};
+
 class GuiBase;
 class GuiWindow;
 struct GuiElement
 {
 	int id;
-	RECT* rc;
+	D2D_RECT_F* rc;
 	LPCWSTR text;
 	int *image;
 	bool through;
@@ -21,7 +32,7 @@ struct GuiElement
 };
 class GuiBase
 {
-public:	
+public:
 	/// <summary>
 	/// 消息响应函数
 	/// </summary>
@@ -31,8 +42,8 @@ public:
 	/// <param name="lparam">lparam.</param>
 	/// <returns>返回1跳过处理后续消息</returns>
 	virtual int WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam) = 0;
-	int state=0;
+	int state = 0;
 	GuiElement* Element;
-	
+
 };
 
