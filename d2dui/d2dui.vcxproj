@@ -108,7 +108,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d2d1.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d2d1.lib;dwrite.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -151,6 +151,7 @@
     <ClInclude Include="changelog" />
     <ClInclude Include="GuiBase.h" />
     <ClInclude Include="GuiButton.h" />
+    <ClInclude Include="GuiImage.h" />
     <ClInclude Include="GuiLabel.h" />
     <ClInclude Include="Guilib.h" />
     <ClInclude Include="GuiWindow.h" />
@@ -158,6 +159,7 @@
   <ItemGroup>
     <ClCompile Include="demo.cpp" />
     <ClCompile Include="GuiButton.cpp" />
+    <ClCompile Include="GuiImage.cpp" />
     <ClCompile Include="GuiLabel.cpp" />
     <ClCompile Include="Guilib.cpp" />
     <ClCompile Include="GuiWindow.cpp" />

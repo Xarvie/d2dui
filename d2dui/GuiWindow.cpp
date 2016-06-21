@@ -4,7 +4,7 @@ MSG                     GuiWindow::msg;
 IDWriteFactory*         GuiWindow::DWriteFactory = NULL;
 ID2D1Factory*           GuiWindow::Factory = NULL;
 GuiWindow**             GuiWindow::Window = NULL;
-
+IWICImagingFactory*		GuiWindow::WICFactory=NULL;
 GuiWindow::~GuiWindow()//释放D2D工厂
 {
 
@@ -152,9 +152,24 @@ int GuiWindow::D2DInit()
 	//创建单线程D2D工厂
 	HRESULT hr;
 	hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &GuiWindow::Factory);
+
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, L"Create Factory Failed", L"Error:", 0);
+		return 0;
+	}
+	// Create WIC factory
+	CoInitialize(NULL);
+	hr = CoCreateInstance(
+		CLSID_WICImagingFactory1,
+		NULL,
+		CLSCTX_INPROC_SERVER,
+		IID_IWICImagingFactory,
+		reinterpret_cast<void **>(&GuiWindow::WICFactory)
+	);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"Create WIC factory Failed", L"Error:", 0);
 		return 0;
 	}
 	//主程序入口点

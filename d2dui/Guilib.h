@@ -2,6 +2,7 @@
 #include "GuiWindow.h"
 #include "GuiLabel.h"
 #include "GuiButton.h"
+#include "GuiImage.h"
 namespace GuiNew
 {
 	
@@ -28,6 +29,17 @@ namespace GuiNew
 		bool            _visible = true
 	);
 	GuiButton* NewButton(
+		GuiWindow*      _window,
+		LPCWSTR         _title = L"Title",
+		float             _x = 0.F,
+		float             _y = 0.F,
+		float             _width = 200.F,
+		float             _height = 90.F,
+		D2D1_COLOR_F    _colorBorder = D2D1::ColorF(0x007ACC, 1.0F),
+		D2D1_COLOR_F    _colorBg = D2D1::ColorF(0x1E1E1E, 1.0F),
+		bool            _visible = true
+	);
+	GuiImage* NewImage(
 		GuiWindow*      _window,
 		LPCWSTR         _title = L"Title",
 		float             _x = 0.F,

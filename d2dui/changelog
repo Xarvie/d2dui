@@ -12,13 +12,38 @@ GuiWindow类		GuiWindow渲染目标随同原生window一起重画.
 
 2016.05.28
 GuiWindow类		GuiWindow创建会附带边框与背景颜色.
-
+GuiWindow类新增NewWindow函数.
 2016.05.29
 GuiWindow类		WriteText参数顺序调整.
 GuiControl类		新增.
-GuiControl类		派生GuiLabel类.
-派生GuiButton类
-派生GuiEdit类
+GuiControl类		派生GuiLabel类(空).
+
+2016.5.31
+GuiControl类		改名为GuiBase类.
+GuiBase派生GuiWindow类和GuiLabel类.
+
+2016.6.05
+GuiBase类重写.
+GuiBase类新增WndProc纯虚函数
+
+2016.6.10
+GuiBase类新增GuiElement结构体.
+GuiElement用于储存控件的各个信息:尺寸,位置,背景图,颜色,标题等等.
+
+2016.6.15
+GuiLabel类新增NewLabel函数.
+
+2016.6.17
+新增Guilib.h 用于包含所有控件头文件.
+所有控件NewXXX函数移动至Guilib.h的命名空间GuiNew中.
+
+2016.6.20
+
+新增GuiButton类.
+Guilib新增NewButton函数.
+GuiButton类新增点燃,按下,点燃并按下和移出四种颜色呈现.
+
+
 
 未实现 :
 主窗口创建
@@ -31,3 +56,6 @@ GuiControl类		派生GuiLabel类.
 子 / 主拖拽
 子 / 主设置位置
 wacom支持
+
+图片框类GuiImage
+编辑框类GuiEdit

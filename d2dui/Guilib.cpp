@@ -151,3 +151,80 @@ GuiButton* GuiNew::NewButton(GuiWindow * _window, LPCWSTR _title, float _x, floa
 	_window->ElementBack = tmp;
 	return control;
 }
+GuiImage* GuiNew::NewImage(GuiWindow * _window, LPCWSTR _title, float _x, float _y, float _width, float _height, D2D1_COLOR_F _colorBorder, D2D1_COLOR_F _colorBg, bool _visible)
+{
+	GuiImage* control = new GuiImage;
+	GuiElement *tmp = new GuiElement;
+	D2D_RECT_F* rc = new D2D_RECT_F;
+	rc->left = _x;
+	rc->top = _y;
+	rc->right = _x + _width;
+	rc->bottom = _y + _height;
+	tmp->child = NULL;
+	tmp->next = NULL;
+	tmp->id = _window->ElementBack->id + 1;
+	tmp->image = NULL;
+	tmp->last = _window->ElementBack;
+	tmp->next = NULL;
+	tmp->parent = NULL;
+	tmp->rc = rc;
+	tmp->text = _title;
+	tmp->through = false;
+	tmp->visible = true;
+	tmp->vfunc = (GuiBase*)control;
+	tmp->window = _window;
+	control->Element = tmp;
+	_window->ElementBack->next = tmp;
+	_window->ElementBack = tmp;
+	HRESULT hr;
+	IWICBitmapDecoder *Decoder = NULL;
+	PCWSTR uri = L"C:\\Users\\ftp\\Desktop\\sampleImage.jpg";
+	hr = _window->WICFactory->CreateDecoderFromFilename(
+		uri,
+		NULL,
+		GENERIC_READ,
+		WICDecodeMetadataCacheOnLoad,
+		&Decoder
+	);
+	if (FAILED(hr))
+	{
+		MessageBox(0, L"Create BitmapDecoder failed", L"Error", 0);
+	}
+	IWICBitmapFrameDecode *Frame = NULL;
+	hr = Decoder->GetFrame(0, &Frame);
+	if (FAILED(hr))
+	{
+		MessageBox(0, L"Create BitmapFrameDecode failed", L"Error", 0);
+	}
+	IWICFormatConverter *Converter = NULL;
+	hr = _window->WICFactory->CreateFormatConverter(&Converter);
+	if (FAILED(hr))
+	{
+		MessageBox(0, L"Create FormatConverter failed", L"Error", 0);
+	}
+	hr = Converter->Initialize(
+		Frame,
+		GUID_WICPixelFormat32bppPBGRA,
+		WICBitmapDitherTypeNone,
+		NULL,
+		0.f,
+		WICBitmapPaletteTypeMedianCut
+	);
+	if (FAILED(hr))
+	{
+		MessageBox(0, L"FormatConverter InitializeFailed", L"Error", 0);
+	}
+
+
+
+	hr = _window->hwndRenderTarget->CreateBitmapFromWicBitmap(
+		Converter,
+		NULL,
+		&control->Element->image
+	);
+	if (FAILED(hr))
+	{
+		MessageBox(0, L"Create BitmapFromWicBitmap Failed", L"Error", 0);
+	}
+	return control;
+}

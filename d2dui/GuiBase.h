@@ -2,6 +2,7 @@
 #include <d2d1.h>
 #include <Windows.h>
 #include <dwrite.h>
+#include <wincodec.h>
 enum MouseState {
 	StateMouseOut,
 	StateMouseIn,
@@ -20,7 +21,7 @@ struct GuiElement
 	int id;
 	D2D_RECT_F* rc;
 	LPCWSTR text;
-	int *image;
+	ID2D1Bitmap* image;
 	bool through;
 	bool visible;
 	GuiBase* vfunc;

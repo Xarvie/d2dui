@@ -35,8 +35,11 @@ public:
 	static IDWriteFactory*      DWriteFactory;
 	static GuiWindow**          Window;
 	static int                  NumBerOfMainWindow;
+	static 	IWICImagingFactory*		WICFactory ;
 	GuiElement* ElementHead;
 	GuiElement* ElementBack;
+
+
 };
 
 void GuiMain();
