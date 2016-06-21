@@ -52,8 +52,15 @@ void GuiWindow::Refresh()
 	ID2D1SolidColorBrush            *BrushBorder;
 	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x1E1E1E, 1.0F), &BrushBg);
 	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x007ACC, 1.0F), &BrushBorder);
-
 	hwndRenderTarget->FillRectangle(rect, BrushBg);
+	if (this->ElementHead->image != NULL)
+	{
+		hwndRenderTarget->DrawBitmap(this->ElementHead->image, this->ElementHead->rc);
+	}
+	else
+	{
+		
+	}
 	hwndRenderTarget->DrawRectangle(rect, BrushBorder,1);
 	
 

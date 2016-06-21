@@ -40,10 +40,10 @@ void GuiButton::Refresh()
 		
 	}
 
-	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(ColorValue, 1.0F), &BrushBg);//0x1E1E1E
+	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(ColorValue,0.3F), &BrushBg);//0x1E1E1E
 	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x007ACC, 1.0F), &BrushBorder);//0x007ACC
 
-	hwndRenderTarget->DrawRectangle(rect, BrushBorder, 1.0F);
+	hwndRenderTarget->DrawRectangle(rect, BrushBorder);
 	hwndRenderTarget->FillRectangle(rect, BrushBg);
 
 	this->Element->window->WriteText(this->Element->text, x + 2, y + 2, r - x, b - y);

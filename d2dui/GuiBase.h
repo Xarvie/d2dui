@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <dwrite.h>
 #include <wincodec.h>
+#define SAFE_RELEASE(P) if(P){P->Release() ; P = NULL ;}
 enum MouseState {
 	StateMouseOut,
 	StateMouseIn,
@@ -24,6 +25,8 @@ struct GuiElement
 	ID2D1Bitmap* image;
 	bool through;
 	bool visible;
+	D2D1_COLOR_F Bg;
+	D2D1_COLOR_F Bd;
 	GuiBase* vfunc;
 	GuiElement* last;
 	GuiElement* next;
@@ -48,6 +51,5 @@ public:
 	int MouseRBState = StateMouseRBUp;
 	int MouseMBState = StateMouseMBUp;
 	GuiElement* Element;
-
 };
 

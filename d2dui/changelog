@@ -43,6 +43,12 @@ GuiLabel类新增NewLabel函数.
 Guilib新增NewButton函数.
 GuiButton类新增点燃,按下,点燃并按下和移出四种颜色呈现.
 
+2016.6.21
+
+新增GuiImage类.
+Guilib新增NewImage函数.
+ 
+
 
 
 未实现 :
@@ -57,5 +63,5 @@ GuiButton类新增点燃,按下,点燃并按下和移出四种颜色呈现.
 子 / 主设置位置
 wacom支持
 
-图片框类GuiImage
+
 编辑框类GuiEdit

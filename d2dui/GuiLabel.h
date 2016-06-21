@@ -14,7 +14,5 @@ public:
 	/// <param name="lparam">lparam.</param>
 	/// <returns>返回1跳过处理后续消息</returns>
 	int WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam);
-
-	
 	void Refresh();
 };

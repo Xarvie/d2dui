@@ -13,10 +13,6 @@ void GuiImage::Refresh()
 	HWND& hwnd = this->Element->window->hwnd;
 	ID2D1HwndRenderTarget*& hwndRenderTarget = this->Element->window->hwndRenderTarget;
 
-	////////////
-
-	HRESULT hr;
-
 	this->Element->window->hwndRenderTarget->DrawBitmap(
 		this->Element->image,
 		this->Element->rc
