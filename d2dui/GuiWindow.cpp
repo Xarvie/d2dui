@@ -43,6 +43,7 @@ void GuiWindow::WriteText(const WCHAR* _String, float _x, float _y, float _width
 		return;
 	}
 	hwndRenderTarget->DrawText(_String, (UINT32)wcslen(_String), TextFormat, TextLayoutRect, BrushWhite);
+	//TextFormat->
 }
 void GuiWindow::Refresh()
 {
