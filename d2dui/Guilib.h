@@ -3,6 +3,7 @@
 #include "GuiLabel.h"
 #include "GuiButton.h"
 #include "GuiImage.h"
+#include "GuiTextBox.h"
 namespace GuiNew
 {
 	GuiWindow* NewWindow(
@@ -27,7 +28,6 @@ namespace GuiNew
 		float           _height = 90.F,
 		D2D1_COLOR_F    _colorBg = D2D1::ColorF(0x1E1E1E, 1.0F),
 		D2D1_COLOR_F    _colorBorder = D2D1::ColorF(0x007ACC, 1.0F),
-		
 		bool            _visible = true
 	);
 	GuiButton* NewButton(
@@ -51,9 +51,21 @@ namespace GuiNew
 		LPCWSTR			_filePath = NULL,
 		bool            _visible = true
 	);
+	GuiTextBox* NewTextBox(
+		GuiWindow*      _window,
+		LPCWSTR         _title = L"Title",
+		float           _x = 0.F,
+		float           _y = 0.F,
+		float           _width = 200.F,
+		float           _height = 90.F,
+		D2D1_COLOR_F    _colorBg = D2D1::ColorF(0x1E1E1E, 1.0F),
+		D2D1_COLOR_F    _colorBorder = D2D1::ColorF(0x007ACC, 1.0F),
+		bool            _visible = true
+	);
 }
 
 namespace GuiFunc
 {
 	void CreateImageFromFile(LPCWSTR _filePath, IWICImagingFactory* _WICFactory, ID2D1HwndRenderTarget* _hwndRenderTarget, ID2D1Bitmap** _image);
-}
+	//float TextWidth[65536];不同字体不同宽度
+} 

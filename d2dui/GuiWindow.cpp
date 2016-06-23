@@ -5,6 +5,7 @@ IDWriteFactory*         GuiWindow::DWriteFactory = NULL;
 ID2D1Factory*           GuiWindow::Factory = NULL;
 GuiWindow**             GuiWindow::Window = NULL;
 IWICImagingFactory*		GuiWindow::WICFactory=NULL;
+float					GuiWindow::CharWidth[65536];
 GuiWindow::~GuiWindow()//释放D2D工厂
 {
 
@@ -43,7 +44,7 @@ void GuiWindow::WriteText(const WCHAR* _String, float _x, float _y, float _width
 		return;
 	}
 	hwndRenderTarget->DrawText(_String, (UINT32)wcslen(_String), TextFormat, TextLayoutRect, BrushWhite);
-	//TextFormat->
+
 }
 void GuiWindow::Refresh()
 {
@@ -81,7 +82,15 @@ int GuiWindow::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam
 	case WM_MOUSEMOVE:
 		return 0;
 	case WM_LBUTTONDOWN:
+	{
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		if (x >= this->ElementHead->rc->left && y >= this->ElementHead->rc->top && x <= this->ElementHead->rc->right && y <= this->ElementHead->rc->bottom)
+		{
+			this->ElementHead->window->ActivatedControlId = this->ElementHead->id;
+		}
 		return 0;
+	}
 	case WM_LBUTTONUP:
 		return 0;
 	case WM_PAINT:
@@ -111,14 +120,42 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 			{
 				pthis->hwndRenderTarget->BeginDraw();
 			}
-			while (tmp != NULL)
+			if (
+				message == WM_MOUSEMOVE ||
+				message == WM_LBUTTONDOWN || message == WM_LBUTTONUP ||
+				message == WM_RBUTTONDOWN || message == WM_RBUTTONUP ||
+				message == WM_MBUTTONDOWN || message == WM_MBUTTONUP
+				)
 			{
-				if (tmp->vfunc->WndProc(hwnd, message, wparam, lparam) != 0)
+				GuiElement* msgTarget = pthis->ElementHead;
+				while (tmp != NULL)
 				{
-					break;
+					int x = LOWORD(lparam);
+					int y = HIWORD(lparam);
+
+					if (x >= tmp->rc->left && y >= tmp->rc->top && x <= tmp->rc->right && y <= tmp->rc->bottom && !tmp->through)
+					{
+						if (tmp->id > msgTarget->id)
+						{
+							msgTarget = tmp;
+						}
+						msgTarget->vfunc->WndProc(hwnd, message, wparam, lparam);
+					}
+					tmp = tmp->next;
 				}
-				tmp = tmp->next;
 			}
+			else
+			{
+				while (tmp != NULL)
+				{
+					if (tmp->vfunc->WndProc(hwnd, message, wparam, lparam) != 0)
+					{
+						break;
+					}
+					tmp = tmp->next;
+				}
+			}
+
 			if (message == WM_PAINT)
 			{
 				pthis->hwndRenderTarget->EndDraw();
@@ -157,6 +194,7 @@ GuiWindow::GuiWindow()
 }
 int GuiWindow::D2DInit()
 {
+	srand((int)clock());
 	//创建单线程D2D工厂
 	HRESULT hr;
 	hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &GuiWindow::Factory);

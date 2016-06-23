@@ -49,7 +49,7 @@ namespace GuiNew
 		//´°¿Ú´´½¨
 		//WS_POPUP | WS_MINIMIZEBOX
 		//WS_OVERLAPPEDWINDOW
-		control->hwnd = CreateWindowEx(NULL, _title, _title, WS_POPUP | WS_MINIMIZEBOX, (int)_x, (int)_y, (int)_width, (int)_height, NULL, NULL, hInstance, NULL);
+		control->hwnd = CreateWindowEx(NULL, _title, _title, WS_OVERLAPPEDWINDOW, (int)_x, (int)_y, (int)_width, (int)_height, NULL, NULL, hInstance, NULL);
 
 		GetClientRect(control->hwnd, &control->MainRc);
 
@@ -194,6 +194,41 @@ namespace GuiNew
 		_window->ElementBack->next = tmp;
 		_window->ElementBack = tmp;
 		GuiFunc::CreateImageFromFile(_filePath, _window->WICFactory, _window->hwndRenderTarget, &control->Element->image);
+		return control;
+	}
+
+	GuiTextBox* NewTextBox(GuiWindow * _window, LPCWSTR _title, float _x, float _y, float _width, float _height, D2D1_COLOR_F _colorBg, D2D1_COLOR_F _colorBorder, bool _visible)
+	{
+		GuiTextBox* control = new GuiTextBox;
+		GuiElement *tmp = new GuiElement;
+		D2D_RECT_F* rc = new D2D_RECT_F;
+		rc->left = _x;
+		rc->top = _y;
+		rc->right = _x + _width;
+		rc->bottom = _y + _height;
+		tmp->child = NULL;
+		tmp->next = NULL;
+		tmp->id = _window->ElementBack->id + 1;
+		tmp->Bd = _colorBorder;
+		tmp->Bg = _colorBg;
+		tmp->image = NULL;
+		tmp->last = _window->ElementBack;
+		tmp->next = NULL;
+		tmp->parent = NULL;
+		tmp->rc = rc;
+		tmp->text = _title;
+		tmp->through = false;
+		tmp->visible = true;
+		tmp->vfunc = (GuiBase*)control;
+		tmp->window = _window;
+		control->Element = tmp;
+		_window->ElementBack->next = tmp;
+		_window->ElementBack = tmp;
+		if (GuiTextBox::CaretTimer == NULL)
+		{
+			GuiTextBox::CaretTimer=rand()%100001;
+			SetTimer(_window->hwnd, GuiTextBox::CaretTimer,600,(TIMERPROC)GuiTextBox::ReDrawCaret);
+		}
 		return control;
 	}
 }

@@ -155,6 +155,7 @@
     <ClInclude Include="GuiImage.h" />
     <ClInclude Include="GuiLabel.h" />
     <ClInclude Include="Guilib.h" />
+    <ClInclude Include="GuiTextBox.h" />
     <ClInclude Include="GuiWindow.h" />
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +164,7 @@
     <ClCompile Include="GuiImage.cpp" />
     <ClCompile Include="GuiLabel.cpp" />
     <ClCompile Include="Guilib.cpp" />
+    <ClCompile Include="GuiTextBox.cpp" />
     <ClCompile Include="GuiWindow.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -40,6 +40,9 @@
     <ClInclude Include="GuiImage.h">
       <Filter>头文件\control</Filter>
     </ClInclude>
+    <ClInclude Include="GuiTextBox.h">
+      <Filter>头文件\control</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="demo.cpp">
@@ -58,6 +61,9 @@
       <Filter>源文件\control</Filter>
     </ClCompile>
     <ClCompile Include="GuiImage.cpp">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiTextBox.cpp">
       <Filter>源文件\control</Filter>
     </ClCompile>
   </ItemGroup>

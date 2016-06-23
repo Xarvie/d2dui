@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <dwrite.h>
 #include <wincodec.h>
+#include <time.h>
 #define SAFE_RELEASE(P) if(P){P->Release() ; P = NULL ;}
 enum MouseState {
 	StateMouseOut,

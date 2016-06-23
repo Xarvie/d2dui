@@ -25,7 +25,15 @@ int GuiImage::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam)
 	case WM_MOUSEMOVE:
 		return 0;
 	case WM_LBUTTONDOWN:
+	{
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		if (x >= this->Element->rc->left && y >= this->Element->rc->top && x <= this->Element->rc->right && y <= this->Element->rc->bottom)
+		{
+			this->Element->window->ActivatedControlId = this->Element->id;
+		}
 		return 0;
+	}
 	case WM_LBUTTONUP:
 		return 0;
 	case WM_PAINT:

@@ -96,6 +96,7 @@ int GuiButton::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam
 		int y = HIWORD(lparam);
 		if (x >= this->Element->rc->left && y >= this->Element->rc->top && x <= this->Element->rc->right && y <= this->Element->rc->bottom)
 		{
+			this->Element->window->ActivatedControlId = this->Element->id;
 			if (MouseLBState != StateMouseLBDown)
 			{
 				MouseLBState = StateMouseLBDown;

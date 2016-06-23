@@ -38,7 +38,8 @@ public:
 	static 	IWICImagingFactory*		WICFactory;
 	GuiElement* ElementHead;
 	GuiElement* ElementBack;
-
+	static float CharWidth[65536];
+	int ActivatedControlId=0;
 };
 
 void GuiMain();
