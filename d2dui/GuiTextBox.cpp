@@ -1,7 +1,7 @@
 #include "GuiTextBox.h"
 unsigned int GuiTextBox::CaretTimer = NULL;
-bool GuiTextBox::CaretVisibleState=false;
-GuiTextBox* GuiTextBox::ActivatedTextBox=NULL;
+bool GuiTextBox::CaretVisibleState = false;
+GuiTextBox* GuiTextBox::ActivatedTextBox = NULL;
 D2D_POINT_2F GuiTextBox::DrawCaret(int pos)
 {
 	D2D_POINT_2F p = { (float)this->Element->rc->left + 1,(float)this->Element->rc->top + 2.0f };
@@ -23,7 +23,7 @@ void GuiTextBox::Refresh()
 	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0xFFFFFF, 0.3F), &BrushBg);
 	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x000000, 1.0F), &CaretColor);
 	hwndRenderTarget->FillRectangle(rect, BrushBg);
-	this->Element->window->WriteText(this->Element->text, x, y, r - x, b - y,16.0f);
+	this->Element->window->WriteText(this->Element->text, x, y, r - x, b - y, 16.0f);
 	if (CaretVisibleState)
 	{
 		D2D_POINT_2F p1 = { x + 157,y + 2.0f };
@@ -35,9 +35,14 @@ void GuiTextBox::Refresh()
 }
 void GuiTextBox::ReDrawCaret()
 {
-	if (ActivatedTextBox != NULL)
+	if (ActivatedTextBox != NULL && ActivatedTextBox->Element->window->ActivatedControlId == ActivatedTextBox->Element->id)
 	{
 		CaretVisibleState = !CaretVisibleState;
+		SendMessage(ActivatedTextBox->Element->window->hwnd, WM_PAINT, 0, 0);
+	}
+	else if(CaretVisibleState)
+	{
+		CaretVisibleState = false;
 		SendMessage(ActivatedTextBox->Element->window->hwnd, WM_PAINT, 0, 0);
 	}
 }

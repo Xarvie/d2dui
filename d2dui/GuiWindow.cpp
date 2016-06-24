@@ -4,7 +4,7 @@ MSG                     GuiWindow::msg;
 IDWriteFactory*         GuiWindow::DWriteFactory = NULL;
 ID2D1Factory*           GuiWindow::Factory = NULL;
 GuiWindow**             GuiWindow::Window = NULL;
-IWICImagingFactory*		GuiWindow::WICFactory=NULL;
+IWICImagingFactory*		GuiWindow::WICFactory = NULL;
 float					GuiWindow::CharWidth[65536];
 GuiWindow::~GuiWindow()//释放D2D工厂
 {
@@ -61,10 +61,10 @@ void GuiWindow::Refresh()
 	}
 	else
 	{
-		
+
 	}
-	hwndRenderTarget->DrawRectangle(rect, BrushBorder,1);
-	
+	hwndRenderTarget->DrawRectangle(rect, BrushBorder, 1);
+
 
 	BrushBg->Release();
 	BrushBorder->Release();
@@ -120,11 +120,31 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 			{
 				pthis->hwndRenderTarget->BeginDraw();
 			}
+			if (message == WM_MOUSEMOVE)
+			{
+				GuiElement* msgTarget = pthis->ElementHead;
+				while (tmp != NULL)
+				{
+					int x = LOWORD(lparam);
+					int y = HIWORD(lparam);
+
+					if (x >= tmp->rc->left && y >= tmp->rc->top && x <= tmp->rc->right && y <= tmp->rc->bottom && !tmp->through)
+					{
+						if (tmp->id > msgTarget->id)
+						{
+							msgTarget = tmp;
+						}
+
+					}
+					tmp = tmp->next;
+				}
+				msgTarget->window->IgniteId = msgTarget->id;
+			}
 			if (
-				message == WM_MOUSEMOVE ||
-				message == WM_LBUTTONDOWN || message == WM_LBUTTONUP ||
-				message == WM_RBUTTONDOWN || message == WM_RBUTTONUP ||
-				message == WM_MBUTTONDOWN || message == WM_MBUTTONUP
+				
+				message == WM_LBUTTONDOWN ||
+				message == WM_RBUTTONDOWN ||
+				message == WM_MBUTTONDOWN 
 				)
 			{
 				GuiElement* msgTarget = pthis->ElementHead;
@@ -139,19 +159,74 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 						{
 							msgTarget = tmp;
 						}
-						msgTarget->vfunc->WndProc(hwnd, message, wparam, lparam);
+
 					}
 					tmp = tmp->next;
 				}
+				if (message == WM_LBUTTONDOWN)
+				{
+					msgTarget->window->ActivatedControlId = msgTarget->id;
+					if (msgTarget->vfunc->MouseLBState != StateMouseLBDown)
+					{
+						msgTarget->vfunc->MouseLBState = StateMouseLBDown;
+					}
+					SetCapture(msgTarget->window->hwnd);
+					SendMessage(msgTarget->window->hwnd, WM_PAINT, 0, 0);
+				}
+				else if (message == WM_RBUTTONDOWN)
+				{
+					msgTarget->window->ActivatedControlId = msgTarget->id;
+					if (msgTarget->vfunc->MouseRBState != StateMouseRBDown)
+					{
+						msgTarget->vfunc->MouseRBState = StateMouseRBDown;
+					}
+					SetCapture(msgTarget->window->hwnd);
+					SendMessage(msgTarget->window->hwnd, WM_PAINT, 0, 0);
+				}
+				else if (message == WM_MBUTTONDOWN)
+				{
+					msgTarget->window->ActivatedControlId = msgTarget->id;
+					if (msgTarget->vfunc->MouseMBState != StateMouseMBDown)
+					{
+						msgTarget->vfunc->MouseMBState = StateMouseMBDown;
+					}
+					SetCapture(msgTarget->window->hwnd);
+				}
+
+				msgTarget->vfunc->WndProc(hwnd, message, wparam, lparam);
 			}
 			else
 			{
+				tmp = pthis->ElementHead;
 				while (tmp != NULL)
 				{
-					if (tmp->vfunc->WndProc(hwnd, message, wparam, lparam) != 0)
+					/*
+					if (message == WM_LBUTTONUP)
+					{
+						tmp->vfunc->MouseLBState = StateMouseLBUp;
+						ReleaseCapture();
+						tmp->vfunc->WndProc(hwnd, message, wparam, lparam);
+						SendMessage(tmp->window->hwnd, WM_PAINT, 0, 0);//修改高性能
+					}
+					else if (message == WM_RBUTTONUP)
+					{
+						tmp->vfunc->MouseRBState = StateMouseRBUp;
+						ReleaseCapture();
+						tmp->vfunc->WndProc(hwnd, message, wparam, lparam);
+						SendMessage(tmp->window->hwnd, WM_PAINT, 0, 0);
+					}
+					else if (message == WM_MBUTTONUP)
+					{
+						tmp->vfunc->MouseMBState = StateMouseMBUp;
+						ReleaseCapture();
+						tmp->vfunc->WndProc(hwnd, message, wparam, lparam);
+						SendMessage(tmp->window->hwnd, WM_PAINT, 0, 0);
+					}
+					else*/ if (tmp->vfunc->WndProc(hwnd, message, wparam, lparam) != 0)
 					{
 						break;
 					}
+
 					tmp = tmp->next;
 				}
 			}

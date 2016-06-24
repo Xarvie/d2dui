@@ -15,7 +15,7 @@ void GuiButton::Refresh()
 	ID2D1SolidColorBrush            *BrushBorder;
 	int ColorValue;
 
-	if (MousePosState == StateMouseIn )
+	if (MousePosState == StateMouseIn)
 	{
 		if (MouseLBState == StateMouseLBDown)
 		{
@@ -23,24 +23,24 @@ void GuiButton::Refresh()
 		}
 		else
 		{
-			ColorValue = 0x2A2A2A;
+			ColorValue = 0x5A2A2A;
 		}
-		
+
 	}
-	else if(MousePosState == StateMouseOut)
+	else if (MousePosState == StateMouseOut)
 	{
 		if (MouseLBState == StateMouseLBDown)
 		{
-			ColorValue = 0x2A2A2A;
+			ColorValue = 0x5A2A2A;
 		}
 		else
 		{
 			ColorValue = 0x1E1E1E;
 		}
-		
+
 	}
 
-	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(ColorValue,0.3F), &BrushBg);//0x1E1E1E
+	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(ColorValue, 0.3F), &BrushBg);//0x1E1E1E
 	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x007ACC, 1.0F), &BrushBorder);//0x007ACC
 
 	hwndRenderTarget->DrawRectangle(rect, BrushBorder);
@@ -54,7 +54,7 @@ void GuiButton::Refresh()
 
 void GuiButton::MouseIn()
 {
-	SendMessage(this->Element->window->hwnd,WM_PAINT,0,0);
+	SendMessage(this->Element->window->hwnd, WM_PAINT, 0, 0);
 }
 void GuiButton::MouseOut()
 {
@@ -70,8 +70,26 @@ int GuiButton::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam
 	{
 	case WM_MOUSEMOVE:
 	{
+		if (this->Element->id == this->Element->window->IgniteId)
+		{
+			if (MousePosState != StateMouseIn)
+			{
+				MousePosState = StateMouseIn;
+				MouseIn();
+			}
+		}
+		else
+		{
+			if (MousePosState != StateMouseOut)
+			{
+				MousePosState = StateMouseOut;
+				MouseOut();
+			}
+		}
+		/*
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
+		
 		if (x >= this->Element->rc->left && y >= this->Element->rc->top && x <= this->Element->rc->right && y <= this->Element->rc->bottom)
 		{
 			if (MousePosState != StateMouseIn)
@@ -88,29 +106,40 @@ int GuiButton::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam
 				MouseOut();
 			}
 		}
+		*/
 		return 0;
 	}
 	case WM_LBUTTONDOWN:
 	{
 		int x = LOWORD(lparam);
 		int y = HIWORD(lparam);
-		if (x >= this->Element->rc->left && y >= this->Element->rc->top && x <= this->Element->rc->right && y <= this->Element->rc->bottom)
+		this->Element->window->ActivatedControlId = this->Element->id;
+		if (MouseLBState != StateMouseLBDown)
 		{
-			this->Element->window->ActivatedControlId = this->Element->id;
-			if (MouseLBState != StateMouseLBDown)
-			{
-				MouseLBState = StateMouseLBDown;
-				MouseLBDown();
-			}
+			MouseLBState = StateMouseLBDown;
+			MouseLBDown();
 		}
 		SetCapture(this->Element->window->hwnd);
 		return 0;
 	}
 	case WM_LBUTTONUP:
+	{
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		if (x >= this->Element->rc->left && y >= this->Element->rc->top && x <= this->Element->rc->right && y <= this->Element->rc->bottom)
+		{
+			//按钮内松开
+			
+			
+
+		}
+
 		MouseLBState = StateMouseLBUp;
 		ReleaseCapture();
-		SendMessage(this->Element->window->hwnd, WM_PAINT, 0, 0);
+
+		SendMessage(this->Element->window->hwnd, WM_PAINT, 0, 0);//修改高性能
 		return 0;
+	}
 	case WM_PAINT:
 		//需要判断是否为空
 		Refresh();

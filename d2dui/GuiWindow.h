@@ -40,6 +40,7 @@ public:
 	GuiElement* ElementBack;
 	static float CharWidth[65536];
 	int ActivatedControlId=0;
+	int IgniteId = 0;
 };
 
 void GuiMain();
