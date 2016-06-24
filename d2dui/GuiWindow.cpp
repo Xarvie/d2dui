@@ -64,8 +64,6 @@ void GuiWindow::Refresh()
 
 	}
 	hwndRenderTarget->DrawRectangle(rect, BrushBorder, 1);
-
-
 	BrushBg->Release();
 	BrushBorder->Release();
 }
@@ -112,7 +110,6 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 	for (int i = 0; i < GuiWindow::NumBerOfMainWindow; i++)
 	{
 		pthis = GuiWindow::Window[i];
-
 		if (hwnd == pthis->hwnd)
 		{
 			GuiElement* tmp = pthis->ElementHead;
@@ -127,14 +124,12 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 				{
 					int x = LOWORD(lparam);
 					int y = HIWORD(lparam);
-
 					if (x >= tmp->rc->left && y >= tmp->rc->top && x <= tmp->rc->right && y <= tmp->rc->bottom && !tmp->through)
 					{
 						if (tmp->id > msgTarget->id)
 						{
 							msgTarget = tmp;
 						}
-
 					}
 					tmp = tmp->next;
 				}
@@ -152,14 +147,12 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 				{
 					int x = LOWORD(lparam);
 					int y = HIWORD(lparam);
-
 					if (x >= tmp->rc->left && y >= tmp->rc->top && x <= tmp->rc->right && y <= tmp->rc->bottom && !tmp->through)
 					{
 						if (tmp->id > msgTarget->id)
 						{
 							msgTarget = tmp;
 						}
-
 					}
 					tmp = tmp->next;
 				}
@@ -192,7 +185,6 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 					}
 					SetCapture(msgTarget->window->hwnd);
 				}
-
 				msgTarget->vfunc->WndProc(hwnd, message, wparam, lparam);
 			}
 			else
