@@ -45,3 +45,15 @@ public:
 
 void GuiMain();
 class GuiButton;
+
+class GuiFont
+{
+public:
+	GuiFont();
+	GuiFont(LPWSTR _familyName, float _fontSize);
+	IDWriteTextFormat* TextFormat = NULL;
+	LPWSTR family = L"Î¢ÈíÑÅºÚ";
+	float size = 15.0;
+	float CharWidth(WCHAR _char);
+	float CharHeight(WCHAR _char);
+};

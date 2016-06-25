@@ -68,3 +68,9 @@ wacom支持
  
 窗口联动
 控件挂接函数
+			WCHAR* s = new WCHAR[200];
+			unsigned long start = GetTickCount();
+			volatile unsigned long end = GetTickCount()-start;
+			volatile unsigned long ii = end;
+			swprintf_s(s, 200, L"%ld", end);
+			MessageBox(0, s, L"", 0);

@@ -5,12 +5,11 @@ IDWriteFactory*         GuiWindow::DWriteFactory = NULL;
 ID2D1Factory*           GuiWindow::Factory = NULL;
 GuiWindow**             GuiWindow::Window = NULL;
 IWICImagingFactory*		GuiWindow::WICFactory = NULL;
-float					GuiWindow::CharWidth[65536];
+
 GuiWindow::~GuiWindow()//ÊÍ·ÅD2D¹¤³§
 {
 
 }
-
 
 void GuiWindow::WriteText(const WCHAR* _String, float _x, float _y, float _width, float _height, float _Size, const WCHAR* _FontName)
 {
@@ -33,16 +32,12 @@ void GuiWindow::WriteText(const WCHAR* _String, float _x, float _y, float _width
 		return;
 	}
 	D2D1_RECT_F TextLayoutRect = D2D1::RectF(
-		(float)_x,
-		(float)_y,
-		(float)_x + _width,
-		(float)_y + _height
+		_x,
+		_y,
+		_x + _width,
+		_y + _height
 	);
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, L"Create IDWriteTextFormat failed!", L"Error", 0);
-		return;
-	}
+
 	hwndRenderTarget->DrawText(_String, (UINT32)wcslen(_String), TextFormat, TextLayoutRect, BrushWhite);
 
 }
@@ -72,7 +67,7 @@ int GuiWindow::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam
 	switch (message)
 	{
 	case WM_CREATE:
-		ShowWindow(hwnd, SW_SHOW);
+		//ShowWindow(hwnd, SW_SHOW);
 		return 0;
 	case WM_ERASEBKGND:
 		message = 0;
@@ -136,10 +131,10 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 				msgTarget->window->IgniteId = msgTarget->id;
 			}
 			if (
-				
+
 				message == WM_LBUTTONDOWN ||
 				message == WM_RBUTTONDOWN ||
-				message == WM_MBUTTONDOWN 
+				message == WM_MBUTTONDOWN
 				)
 			{
 				GuiElement* msgTarget = pthis->ElementHead;
@@ -163,7 +158,7 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 					{
 						msgTarget->vfunc->MouseLBState = StateMouseLBDown;
 					}
-					SetCapture(msgTarget->window->hwnd);
+					//SetCapture(msgTarget->window->hwnd);
 					SendMessage(msgTarget->window->hwnd, WM_PAINT, 0, 0);
 				}
 				else if (message == WM_RBUTTONDOWN)
@@ -173,7 +168,7 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 					{
 						msgTarget->vfunc->MouseRBState = StateMouseRBDown;
 					}
-					SetCapture(msgTarget->window->hwnd);
+					//SetCapture(msgTarget->window->hwnd);
 					SendMessage(msgTarget->window->hwnd, WM_PAINT, 0, 0);
 				}
 				else if (message == WM_MBUTTONDOWN)
@@ -183,7 +178,7 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 					{
 						msgTarget->vfunc->MouseMBState = StateMouseMBDown;
 					}
-					SetCapture(msgTarget->window->hwnd);
+					//SetCapture(msgTarget->window->hwnd);
 				}
 				msgTarget->vfunc->WndProc(hwnd, message, wparam, lparam);
 			}
@@ -219,7 +214,7 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 						break;
 					}
 
-					tmp = tmp->next;
+				tmp = tmp->next;
 				}
 			}
 
@@ -293,6 +288,67 @@ int GuiWindow::D2DInit()
 		DispatchMessage(&msg);
 	}
 
-
 	return 0;
+}
+
+GuiFont::GuiFont()
+{
+	HRESULT hr;
+	hr = GuiWindow::DWriteFactory->CreateTextFormat(
+		family,
+		NULL,
+		DWRITE_FONT_WEIGHT_REGULAR,
+		DWRITE_FONT_STYLE_NORMAL,
+		DWRITE_FONT_STRETCH_NORMAL,
+		size,
+		L"",
+		&TextFormat
+	);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"Create IDWriteTextFormat failed!", L"Error", 0);
+		return;
+	}
+}
+
+
+GuiFont::GuiFont(LPWSTR family, float size) :family(family), size(size)
+{
+	HRESULT hr;
+	hr = GuiWindow::DWriteFactory->CreateTextFormat(
+		this->family,
+		NULL,
+		DWRITE_FONT_WEIGHT_REGULAR,
+		DWRITE_FONT_STYLE_NORMAL,
+		DWRITE_FONT_STRETCH_NORMAL,
+		size,
+		L"",
+		&TextFormat
+	);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"Create IDWriteTextFormat failed!", L"Error", 0);
+		return;
+	}
+}
+float GuiFont::CharWidth(WCHAR _char)
+{
+	IDWriteTextLayout* textLayout = NULL;
+	HRESULT hr;
+	hr = GuiWindow::DWriteFactory->CreateTextLayout(&_char, 1, TextFormat, 0, 0, &textLayout);
+	DWRITE_TEXT_METRICS metrics;
+	textLayout->GetMetrics(&metrics);
+	textLayout->Release();
+	return metrics.widthIncludingTrailingWhitespace;
+}
+
+float GuiFont::CharHeight(WCHAR _char)
+{
+	IDWriteTextLayout* textLayout = NULL;
+	HRESULT hr;
+	hr = GuiWindow::DWriteFactory->CreateTextLayout(&_char, 1, TextFormat, 0, 0, &textLayout);
+	DWRITE_TEXT_METRICS metrics;
+	textLayout->GetMetrics(&metrics);
+	textLayout->Release();
+	return metrics.height;
 }

@@ -18,11 +18,13 @@ enum MouseState {
 
 class GuiBase;
 class GuiWindow;
+class GuiFont;
 struct GuiElement
 {
 	int id;
 	D2D_RECT_F* rc;
 	LPCWSTR text;
+	GuiFont* font=NULL;
 	ID2D1Bitmap* image;
 	bool through;
 	bool visible;

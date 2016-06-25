@@ -130,10 +130,7 @@ int GuiButton::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam
 		{
 			//°´Å¥ÄÚËÉ¿ª
 			
-			
-
 		}
-
 		MouseLBState = StateMouseLBUp;
 		ReleaseCapture();
 

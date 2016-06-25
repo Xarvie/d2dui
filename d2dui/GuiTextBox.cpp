@@ -1,12 +1,27 @@
 #include "GuiTextBox.h"
-unsigned int GuiTextBox::CaretTimer = NULL;
-bool GuiTextBox::CaretVisibleState = false;
-GuiTextBox* GuiTextBox::ActivatedTextBox = NULL;
+unsigned int	GuiTextBox::CaretTimer = NULL;
+bool			GuiTextBox::CaretVisibleState = false;
+GuiTextBox*		GuiTextBox::ActivatedTextBox = NULL;
+
 D2D_POINT_2F GuiTextBox::DrawCaret(int pos)
 {
-	D2D_POINT_2F p = { (float)this->Element->rc->left + 1,(float)this->Element->rc->top + 2.0f };
+	float width = 0;
+	LPCWSTR str = this->Element->text;
+	float BoxX = this->Element->rc->left;
+	float BoxY = this->Element->rc->top;
+
+	for (size_t i = 0; i < wcslen(this->Element->text); i++)
+	{
+		if (i > pos)
+		{
+			break;
+		}
+		width += this->Element->font->CharWidth(str[i]);
+	}
+	D2D_POINT_2F p = { (float)this->Element->rc->left + width,(float)this->Element->rc->top };
 	return p;
 }
+
 void GuiTextBox::Refresh()
 {
 	float x, y, r, b;
@@ -21,18 +36,21 @@ void GuiTextBox::Refresh()
 	ID2D1SolidColorBrush            *BrushBg;
 	ID2D1SolidColorBrush            *CaretColor;
 	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0xFFFFFF, 0.3F), &BrushBg);
-	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x000000, 1.0F), &CaretColor);
+	hwndRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x990000, 1.0F), &CaretColor);
 	hwndRenderTarget->FillRectangle(rect, BrushBg);
-	this->Element->window->WriteText(this->Element->text, x, y, r - x, b - y, 16.0f);
+	this->Element->window->WriteText(this->Element->text, x, y, r - x, b - y, this->Element->font->size);
 	if (CaretVisibleState)
 	{
-		D2D_POINT_2F p1 = { x + 157,y + 2.0f };
-		D2D_POINT_2F p2 = { x + 157,y + 19 + 2.0f };
+		D2D_POINT_2F p1 = DrawCaret(14);
+		D2D_POINT_2F p2 = { p1.x,p1.y + this->Element->font->CharHeight(' ') };
 		hwndRenderTarget->DrawLine(p1, p2, CaretColor);
 	}
-	BrushBg->Release();
 
+
+	BrushBg->Release();
+	CaretColor->Release();
 }
+
 void GuiTextBox::ReDrawCaret()
 {
 	if (ActivatedTextBox != NULL && ActivatedTextBox->Element->window->ActivatedControlId == ActivatedTextBox->Element->id)
@@ -40,7 +58,7 @@ void GuiTextBox::ReDrawCaret()
 		CaretVisibleState = !CaretVisibleState;
 		SendMessage(ActivatedTextBox->Element->window->hwnd, WM_PAINT, 0, 0);
 	}
-	else if(CaretVisibleState)
+	else if (CaretVisibleState)
 	{
 		CaretVisibleState = false;
 		SendMessage(ActivatedTextBox->Element->window->hwnd, WM_PAINT, 0, 0);
@@ -61,6 +79,7 @@ int GuiTextBox::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lpara
 			this->Element->window->ActivatedControlId = this->Element->id;
 			GuiTextBox::ActivatedTextBox = this;
 		}
+
 		return 0;
 	}
 	case WM_LBUTTONUP:

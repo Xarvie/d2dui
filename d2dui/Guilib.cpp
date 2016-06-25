@@ -1,4 +1,5 @@
 #include "Guilib.h"
+
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) { return GuiWindow::D2DInit(); }
 namespace GuiNew
 {
@@ -50,6 +51,7 @@ namespace GuiNew
 		//WS_POPUP | WS_MINIMIZEBOX
 		//WS_OVERLAPPEDWINDOW
 		control->hwnd = CreateWindowEx(NULL, _title, _title, WS_OVERLAPPEDWINDOW, (int)_x, (int)_y, (int)_width, (int)_height, NULL, NULL, hInstance, NULL);
+
 
 		GetClientRect(control->hwnd, &control->MainRc);
 
@@ -194,6 +196,7 @@ namespace GuiNew
 		_window->ElementBack->next = tmp;
 		_window->ElementBack = tmp;
 		GuiFunc::CreateImageFromFile(_filePath, _window->WICFactory, _window->hwndRenderTarget, &control->Element->image);
+		GuiFont ft;
 		return control;
 	}
 
@@ -202,6 +205,7 @@ namespace GuiNew
 		GuiTextBox* control = new GuiTextBox;
 		GuiElement *tmp = new GuiElement;
 		D2D_RECT_F* rc = new D2D_RECT_F;
+		GuiFont *font = new GuiFont;
 		rc->left = _x;
 		rc->top = _y;
 		rc->right = _x + _width;
@@ -219,6 +223,7 @@ namespace GuiNew
 		tmp->text = _title;
 		tmp->through = false;
 		tmp->visible = true;
+		tmp->font = font;
 		tmp->vfunc = (GuiBase*)control;
 		tmp->window = _window;
 		control->Element = tmp;
@@ -288,5 +293,5 @@ namespace GuiFunc
 		SAFE_RELEASE(Frame);
 		SAFE_RELEASE(Converter);
 	}
-
 }
+
