@@ -50,7 +50,7 @@ namespace GuiNew
 		//´°¿Ú´´½¨
 		//WS_POPUP | WS_MINIMIZEBOX
 		//WS_OVERLAPPEDWINDOW
-		control->hwnd = CreateWindowEx(NULL, _title, _title, WS_OVERLAPPEDWINDOW, (int)_x, (int)_y, (int)_width, (int)_height, NULL, NULL, hInstance, NULL);
+		control->hwnd = CreateWindowEx(NULL, _title, _title, WS_POPUP | WS_MINIMIZEBOX, (int)_x, (int)_y, (int)_width, (int)_height, NULL, NULL, hInstance, NULL);
 
 
 		GetClientRect(control->hwnd, &control->MainRc);

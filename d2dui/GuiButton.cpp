@@ -111,8 +111,6 @@ int GuiButton::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam
 	}
 	case WM_LBUTTONDOWN:
 	{
-		int x = LOWORD(lparam);
-		int y = HIWORD(lparam);
 		this->Element->window->ActivatedControlId = this->Element->id;
 		if (MouseLBState != StateMouseLBDown)
 		{

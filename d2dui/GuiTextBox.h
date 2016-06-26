@@ -16,10 +16,16 @@ public:
 	int WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam);
 	void Refresh();
 
-	D2D_POINT_2F DrawCaret(int pos = 0);
+	int DrawCaret(int pos = 0);
 	static void ReDrawCaret();
+	void MouseIn();
+	void MouseOut();
+	void DrawSelectRect(float x1, float x2);
 	static bool CaretVisibleState;
 	static GuiTextBox* ActivatedTextBox;
 	static unsigned int CaretTimer;
 	int CaretPos = 0;
+	float selectBegin = 0;
+	float selectEnd = 0;
+	float clickpos = 0;
 };

@@ -4,7 +4,6 @@
 class GuiButton :public GuiBase
 {
 public:
-
 	/// <summary>
 	/// 消息响应函数
 	/// </summary>

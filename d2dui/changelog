@@ -3,23 +3,24 @@
 GuiWindows类 创建
 
 2016.05.24
-GuiWindow类		重写.
-D2DUI类			成员函数增加Refresh.
-D2DUI类			成员与函数并入GuiWindow类.
-D2DUI类			移除.
-UI库				封装WINDOWS窗口消息.
-GuiWindow类		GuiWindow渲染目标随同原生window一起重画.
+GuiWindow类重写.
+D2DUI类成员函数增加Refresh.
+D2DUI类成员与函数并入GuiWindow类.
+D2DUI类移除.
+UI库封装WINDOWS窗口消息.
+GuiWindow类GuiWindow渲染目标随同原生window一起重画.
 
 2016.05.28
-GuiWindow类		GuiWindow创建会附带边框与背景颜色.
+GuiWindow类GuiWindow创建会附带边框与背景颜色.
 GuiWindow类新增NewWindow函数.
+
 2016.05.29
-GuiWindow类		WriteText参数顺序调整.
-GuiControl类		新增.
-GuiControl类		派生GuiLabel类(空).
+GuiWindow类WriteText参数顺序调整.
+GuiControl类新增.
+GuiControl类派生GuiLabel类(空).
 
 2016.5.31
-GuiControl类		改名为GuiBase类.
+GuiControl类改名为GuiBase类.
 GuiBase派生GuiWindow类和GuiLabel类.
 
 2016.6.05
@@ -38,19 +39,23 @@ GuiLabel类新增NewLabel函数.
 所有控件NewXXX函数移动至Guilib.h的命名空间GuiNew中.
 
 2016.6.20
-
 新增GuiButton类.
 Guilib新增NewButton函数.
 GuiButton类新增点燃,按下,点燃并按下和移出四种颜色呈现.
 
 2016.6.21
-
 新增GuiImage类.
 Guilib新增NewImage函数.
 
 2016.6.22
 停止更新
 
+2016.6.25
+新增GuiTextBox类.
+Guilib新增NewTextBox函数.
+
+2016.6.26
+GuiTextBox 单击 √ 双击 × 框选 × 复制 × 粘贴 × 剪切 × 左移 × 右移 ×
 
 
 未实现 :
@@ -64,8 +69,6 @@ Guilib新增NewImage函数.
 wacom支持
 
 
-编辑框类GuiEdit
- 
 窗口联动
 控件挂接函数
 			WCHAR* s = new WCHAR[200];
