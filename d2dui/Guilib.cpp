@@ -107,7 +107,6 @@ namespace GuiNew
 			GuiFunc::CreateImageFromFile(_filePath, control->WICFactory, control->hwndRenderTarget, &control->ElementHead->image);
 		}
 		
-
 		ShowWindow(control->hwnd, SW_SHOW);
 
 		return control;
