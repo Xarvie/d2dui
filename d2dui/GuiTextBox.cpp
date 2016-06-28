@@ -11,13 +11,15 @@ int GuiTextBox::DrawCaret(int pos)
 	float BoxX = this->Element->rc->left;
 	float BoxY = this->Element->rc->top;
 	float x = pos - BoxX;
-	int choosePos = 0;
-
-	for (int i = 0; i < wcslen(this->Element->text); i++)
+	int choosePos = -1;
+	int len = (int)wcslen(this->Element->text);
+	float charWidth=0;
+	int i;
+	for ( i = 0; i < len; i++)
 	{
-		choosePos = i;
-		float charWidth = this->Element->font->CharWidth(str[i]);
-		if ((Leftwidth + charWidth*0.6F) >= x)
+		choosePos++;
+		charWidth = this->Element->font->CharWidth(str[i]);
+		if ((Leftwidth + charWidth*0.5F) >= x)
 		{
 			lastLeftwidth = Leftwidth;
 			Leftwidth += charWidth;
@@ -26,7 +28,11 @@ int GuiTextBox::DrawCaret(int pos)
 		lastLeftwidth = Leftwidth;
 		Leftwidth += charWidth;
 	}
-
+	if (i == len )
+	{
+		choosePos++;
+		lastLeftwidth += charWidth;
+	}
 	selectEnd = (float)this->Element->rc->left + lastLeftwidth;
 	return choosePos;
 }
@@ -118,22 +124,27 @@ int GuiTextBox::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lpara
 		}
 		if (MouseLBState == StateMouseLBDown)
 		{
-			DrawCaret(x);
+			selectEndCount = DrawCaret(x);
 			if (selectEnd > clickpos)
 			{
 				selectBegin = clickpos;
+				selectBeginCount = clickposCount;
 				DrawSelectRect(selectBegin, selectEnd);
 				SendMessage(ActivatedTextBox->Element->window->hwnd, WM_PAINT, 0, 0);
 			}
 			else if (selectEnd < clickpos)
 			{
-				selectBegin = clickpos;
+				selectBegin = selectEnd;
+				selectEnd = clickpos;
+				selectBeginCount = selectEndCount;
+				selectEndCount = clickposCount;
 				DrawSelectRect(selectBegin, selectEnd);
 				SendMessage(ActivatedTextBox->Element->window->hwnd, WM_PAINT, 0, 0);
 			}
 			else if (selectEnd == clickpos)
 			{
 				selectBegin = selectEnd;
+				selectBeginCount = selectEndCount;
 			}
 		}
 	}
@@ -145,8 +156,9 @@ int GuiTextBox::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lpara
 
 		this->Element->window->ActivatedControlId = this->Element->id;
 		GuiTextBox::ActivatedTextBox = this;
-
-		DrawCaret(x);
+		clickposCount = DrawCaret(x);
+		selectBeginCount = clickposCount;
+		selectEndCount = clickposCount;
 		clickpos = selectEnd;
 		selectBegin = selectEnd;
 		if (MouseLBState != StateMouseLBDown)
@@ -180,6 +192,19 @@ int GuiTextBox::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lpara
 		//需要判断是否为空
 		Refresh();
 		return 0;
+	case WM_CHAR:
+	{
+		
+		wchar_t* tmp = new wchar_t[2];
+		tmp[0] = (WCHAR)wparam;
+		tmp[1] = '\0';
+		int len = (selectEndCount - selectBeginCount) + 1;
+		wchar_t* tmp2 = new wchar_t[len];
+		wcsncpy_s(tmp2, len, this->Element->text + selectBeginCount, len - 1);
+		tmp2[len - 1] = '\0';
+		MessageBox(0, tmp2, L"", 0);
+		//this->Element->text = tmp;
+	}
 	case WM_DESTROY:
 		return 0;
 	case WM_SIZE:

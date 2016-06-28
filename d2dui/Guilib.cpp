@@ -39,7 +39,9 @@ namespace GuiNew
 			control->ElementHead->next = NULL;
 			control->ElementHead->parent = NULL;
 			control->ElementHead->rc = rc;
-			control->ElementHead->text = _title;
+			wchar_t* tmpstr = new wchar_t[wcslen(_title) + 1];
+			wcscpy_s(tmpstr, wcslen(_title) + 1, _title);
+			control->ElementHead->text = tmpstr;
 			control->ElementHead->through = false;
 			control->ElementHead->visible = true;
 			control->ElementHead->vfunc = (GuiBase*)control;
@@ -130,7 +132,9 @@ namespace GuiNew
 		tmp->next = NULL;
 		tmp->parent = NULL;
 		tmp->rc = rc;
-		tmp->text = _title;
+		wchar_t* tmpstr = new wchar_t[wcslen(_title) + 1];
+		wcscpy_s(tmpstr, wcslen(_title) + 1, _title);
+		tmp->text = tmpstr;
 		tmp->through = false;
 		tmp->visible = true;
 		tmp->vfunc = (GuiBase*)control;
@@ -159,7 +163,9 @@ namespace GuiNew
 		tmp->next = NULL;
 		tmp->parent = NULL;
 		tmp->rc = rc;
-		tmp->text = _title;
+		wchar_t* tmpstr = new wchar_t[wcslen(_title) + 1];
+		wcscpy_s(tmpstr, wcslen(_title) + 1, _title);
+		tmp->text = tmpstr;
 		tmp->through = false;
 		tmp->visible = true;
 		tmp->vfunc = (GuiBase*)control;
@@ -187,7 +193,9 @@ namespace GuiNew
 		tmp->next = NULL;
 		tmp->parent = NULL;
 		tmp->rc = rc;
-		tmp->text = _title;
+		wchar_t* tmpstr = new wchar_t[wcslen(_title) + 1];
+		wcscpy_s(tmpstr, wcslen(_title) + 1, _title);
+		tmp->text = tmpstr;
 		tmp->through = false;
 		tmp->visible = true;
 		tmp->vfunc = (GuiBase*)control;
@@ -220,7 +228,9 @@ namespace GuiNew
 		tmp->next = NULL;
 		tmp->parent = NULL;
 		tmp->rc = rc;
-		tmp->text = _title;
+		wchar_t* tmpstr = new wchar_t[wcslen(_title) + 1];
+		wcscpy_s(tmpstr, wcslen(_title) + 1, _title);
+		tmp->text = tmpstr;
 		tmp->through = false;
 		tmp->visible = true;
 		tmp->font = font;

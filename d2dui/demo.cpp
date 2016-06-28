@@ -13,5 +13,5 @@ void GuiMain()
 	GuiButton* button1	= NewButton(window1, L" 按钮A"						, 20,  90 + 6 * 30, 100, 24);
 	GuiButton* button2	= NewButton(window1, L"   按钮B"						, 50, 90 + 6 * 30+10, 100, 24);
 	GuiImage* image1	= NewImage(window1, L"创建迷你小埋"					, 620, 90 + 7 * 30, 50, 50,L"C:\\小埋.png");
-	GuiTextBox*TextBox1 = NewTextBox(window1, L"文本编辑框1.TextBox  "		, 20,  90 + 8 * 30, 250, 24);
+	GuiTextBox*TextBox1 = NewTextBox(window1, L"文文1"		, 20,  90 + 8 * 30, 250, 24);
 }

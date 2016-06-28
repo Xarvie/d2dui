@@ -23,7 +23,7 @@ struct GuiElement
 {
 	int id;
 	D2D_RECT_F* rc;
-	LPCWSTR text;
+	wchar_t * text;
 	GuiFont* font=NULL;
 	ID2D1Bitmap* image;
 	bool through;

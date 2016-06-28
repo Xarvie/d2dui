@@ -28,4 +28,7 @@ public:
 	float selectBegin = 0;
 	float selectEnd = 0;
 	float clickpos = 0;
+	int selectBeginCount = 0;
+	int selectEndCount = 0;
+	int clickposCount = 0;
 };

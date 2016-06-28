@@ -131,7 +131,6 @@ LRESULT CALLBACK GuiWindow::WndMsgProc(HWND hwnd, UINT message, WPARAM wparam, L
 				msgTarget->window->IgniteId = msgTarget->id;
 			}
 			if (
-
 				message == WM_LBUTTONDOWN ||
 				message == WM_RBUTTONDOWN ||
 				message == WM_MBUTTONDOWN
