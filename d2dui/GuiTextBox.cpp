@@ -1,9 +1,38 @@
 #include "GuiTextBox.h"
+#include <stdio.h>
 unsigned int	GuiTextBox::CaretTimer = NULL;
 bool			GuiTextBox::CaretVisibleState = false;
 GuiTextBox*		GuiTextBox::ActivatedTextBox = NULL;
 
-int GuiTextBox::DrawCaret(int pos)
+void replace(wchar_t** source, wchar_t* cpy, int begin, int len)
+{
+	wchar_t tmp[1024];
+	int i;
+	int i2;
+	for (i = 0; i < begin; i++)
+	{
+		tmp[i] = (*source)[i];
+	}
+	i2 = i;
+	for (; i - i2 < wcslen(cpy); i++)
+	{
+		tmp[i] = cpy[i - begin];
+	}
+	i2 = i;
+	for (i = 0; i < wcslen(*source + begin + len); i++)
+	{
+
+		tmp[i + i2] = (*source + begin + len)[i];
+
+	}
+	tmp[i + i2] = '\0';
+	delete *source;
+	*source = new wchar_t[wcslen(tmp) + 1];
+	wcscpy_s(*source, wcslen(tmp) + 1, tmp);
+	(*source)[wcslen(*source)] = '\0';
+}
+
+int GuiTextBox::DrawCaretByPos(int pos)
 {
 	float Leftwidth = 0;
 	float lastLeftwidth = 0;
@@ -13,9 +42,9 @@ int GuiTextBox::DrawCaret(int pos)
 	float x = pos - BoxX;
 	int choosePos = -1;
 	int len = (int)wcslen(this->Element->text);
-	float charWidth=0;
+	float charWidth = 0;
 	int i;
-	for ( i = 0; i < len; i++)
+	for (i = 0; i < len; i++)
 	{
 		choosePos++;
 		charWidth = this->Element->font->CharWidth(str[i]);
@@ -28,7 +57,7 @@ int GuiTextBox::DrawCaret(int pos)
 		lastLeftwidth = Leftwidth;
 		Leftwidth += charWidth;
 	}
-	if (i == len )
+	if (i == len)
 	{
 		choosePos++;
 		lastLeftwidth += charWidth;
@@ -36,7 +65,30 @@ int GuiTextBox::DrawCaret(int pos)
 	selectEnd = (float)this->Element->rc->left + lastLeftwidth;
 	return choosePos;
 }
+int GuiTextBox::DrawCaretByCount(int count)
+{
+	float Leftwidth = 0;
+	LPCWSTR str = this->Element->text;
+	float BoxX = this->Element->rc->left;
+	float BoxY = this->Element->rc->top;
+	int len = (int)wcslen(this->Element->text);
+	float charWidth = 0;
+	int i;
 
+	for (i = 0; i < len; i++)
+	{
+		if (i == count)
+		{
+			break;
+		}
+		charWidth = this->Element->font->CharWidth(str[i]);
+		Leftwidth += charWidth;
+	}
+	selectBegin = selectEnd = BoxX + Leftwidth;
+	selectBeginCount = i;
+	selectEndCount = i;
+	return 0;
+}
 void GuiTextBox::Refresh()
 {
 	float x, y, r, b;
@@ -93,10 +145,7 @@ void GuiTextBox::MouseOut()
 {
 
 }
-void GuiTextBox::DrawSelectRect(float x1, float x2)
-{
 
-}
 int GuiTextBox::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam)
 {
 	switch (message)
@@ -124,12 +173,11 @@ int GuiTextBox::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lpara
 		}
 		if (MouseLBState == StateMouseLBDown)
 		{
-			selectEndCount = DrawCaret(x);
+			selectEndCount = DrawCaretByPos(x);
 			if (selectEnd > clickpos)
 			{
 				selectBegin = clickpos;
 				selectBeginCount = clickposCount;
-				DrawSelectRect(selectBegin, selectEnd);
 				SendMessage(ActivatedTextBox->Element->window->hwnd, WM_PAINT, 0, 0);
 			}
 			else if (selectEnd < clickpos)
@@ -138,7 +186,6 @@ int GuiTextBox::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lpara
 				selectEnd = clickpos;
 				selectBeginCount = selectEndCount;
 				selectEndCount = clickposCount;
-				DrawSelectRect(selectBegin, selectEnd);
 				SendMessage(ActivatedTextBox->Element->window->hwnd, WM_PAINT, 0, 0);
 			}
 			else if (selectEnd == clickpos)
@@ -156,7 +203,7 @@ int GuiTextBox::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lpara
 
 		this->Element->window->ActivatedControlId = this->Element->id;
 		GuiTextBox::ActivatedTextBox = this;
-		clickposCount = DrawCaret(x);
+		clickposCount = DrawCaretByPos(x);
 		selectBeginCount = clickposCount;
 		selectEndCount = clickposCount;
 		clickpos = selectEnd;
@@ -179,12 +226,9 @@ int GuiTextBox::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lpara
 		if (x >= this->Element->rc->left && y >= this->Element->rc->top && x <= this->Element->rc->right && y <= this->Element->rc->bottom)
 		{
 			//按钮内松开
-
 		}
 		MouseLBState = StateMouseLBUp;
-
 		ReleaseCapture();
-
 		SendMessage(this->Element->window->hwnd, WM_PAINT, 0, 0);//修改高性能
 		return 0;
 	}
@@ -192,18 +236,71 @@ int GuiTextBox::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lpara
 		//需要判断是否为空
 		Refresh();
 		return 0;
+	case WM_KEYDOWN:
+	{
+		if (this->Element->id != this->Element->window->IgniteId)
+		{
+			return 0;
+		}
+		HIMC hImc = ImmGetContext(this->Element->window->hwnd);
+		COMPOSITIONFORM form;
+		form.dwStyle = CFS_RECT;
+		POINT pt = { (int)selectBegin ,(int)this->Element->rc->top };
+		form.ptCurrentPos = pt;
+		RECT rt = { pt.x, 0, pt.x + 300, 100 };
+		form.rcArea = rt;
+		ImmSetCompositionWindow(hImc, &form);
+		return 0;
+	}
 	case WM_CHAR:
 	{
-		
-		wchar_t* tmp = new wchar_t[2];
-		tmp[0] = (WCHAR)wparam;
-		tmp[1] = '\0';
+		if (this->Element->id != this->Element->window->IgniteId)
+		{
+			return 0;
+		}
 		int len = (selectEndCount - selectBeginCount) + 1;
-		wchar_t* tmp2 = new wchar_t[len];
-		wcsncpy_s(tmp2, len, this->Element->text + selectBeginCount, len - 1);
-		tmp2[len - 1] = '\0';
-		MessageBox(0, tmp2, L"", 0);
-		//this->Element->text = tmp;
+		wchar_t* tmp = new wchar_t[len];
+		wcsncpy_s(tmp, len, this->Element->text + selectBeginCount, len - 1);
+		tmp[len - 1] = '\0';
+
+		switch ((WCHAR)wparam)
+		{
+		case '\b':
+			if (selectBeginCount == selectEndCount)
+			{
+				if (selectBeginCount < 1)
+				{
+					break;
+				}
+				replace(&this->Element->text, L"", --selectBeginCount, 1);
+				DrawCaretByCount(selectBeginCount);
+				SendMessage(this->Element->window->hwnd, WM_PAINT, 0, 0);
+			}
+			else
+			{
+				replace(&this->Element->text, L"", selectBeginCount, selectEndCount - selectBeginCount);
+				DrawCaretByCount(selectBeginCount);
+				SendMessage(this->Element->window->hwnd, WM_PAINT, 0, 0);
+			}
+			break;
+
+		default:
+			if (selectBeginCount == selectEndCount)
+			{
+				wchar_t tmp[2] = { (WCHAR)wparam ,0 };
+				replace(&this->Element->text, tmp, selectBeginCount++, 0);
+				DrawCaretByCount(selectBeginCount);
+				SendMessage(this->Element->window->hwnd, WM_PAINT, 0, 0);
+			}
+			else
+			{
+				wchar_t tmp[2] = { (WCHAR)wparam ,0 };
+				replace(&this->Element->text, tmp, selectBeginCount, selectEndCount - selectBeginCount);
+				DrawCaretByCount(++selectBeginCount);
+				SendMessage(this->Element->window->hwnd, WM_PAINT, 0, 0);
+			}
+			break;
+		}
 	}
 	case WM_DESTROY:
 		return 0;
@@ -212,4 +309,3 @@ int GuiTextBox::WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lpara
 	}
 	return 0;
 }
-

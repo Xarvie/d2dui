@@ -15,12 +15,11 @@ public:
 	/// <returns>返回1跳过处理后续消息</returns>
 	int WndProc(HWND &hwnd, UINT &message, WPARAM &wparam, LPARAM &lparam);
 	void Refresh();
-
-	int DrawCaret(int pos = 0);
+	int DrawCaretByPos(int pos = 0);
+	int DrawCaretByCount(int pos = 0);
 	static void ReDrawCaret();
 	void MouseIn();
 	void MouseOut();
-	void DrawSelectRect(float x1, float x2);
 	static bool CaretVisibleState;
 	static GuiTextBox* ActivatedTextBox;
 	static unsigned int CaretTimer;

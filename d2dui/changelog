@@ -1,6 +1,5 @@
-
 2016.05.23
-GuiWindows类 创建
+GuiWindows类创建
 
 2016.05.24
 GuiWindow类重写.
@@ -55,11 +54,12 @@ Guilib新增NewImage函数.
 Guilib新增NewTextBox函数.
 
 2016.6.26
-GuiTextBox 单击 √ 双击 × 框选 × 复制 × 粘贴 × 剪切 × 左移 × 右移 ×
+GuiTextBox 单击 √  双击 ×  框选 ×  复制 ×  粘贴 ×  剪切 ×  左移 ×  右移 ×  输入法跟随 ×
 
+2016.6.29
+GuiTextBox 单击 √  双击 ×  框选 ×  复制 ×  粘贴 ×  剪切 ×  左移 ×  右移 ×  输入法跟随 √
 
 未实现 :
-
 
 窗口拉伸
 可视设置

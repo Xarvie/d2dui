@@ -108,7 +108,6 @@ namespace GuiNew
 		}
 		
 		ShowWindow(control->hwnd, SW_SHOW);
-
 		return control;
 	}
 
