@@ -1,2 +1,2 @@
 # d2dui
-## A simple ui lib,Just used to practice.
+## A simple ui lib for win.
